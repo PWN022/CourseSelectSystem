@@ -1,0 +1,74 @@
+/* Global Styles */
+
+/* Import Element Plus variables */
+@import './element-variables.scss';
+
+/* Import auth styles */
+@import './auth.scss';
+
+/* Reset styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
+
+#app {
+  height: 100%;
+}
+
+/* Common styles */
+.page-container {
+  padding: 20px;
+}
+
+.page-title {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Table styles */
+.el-table {
+  margin-bottom: 20px;
+}
+
+/* Form styles */
+.form-container {
+  max-width: 600px;
+}
+
+/* Card styles */
+.el-card {
+  margin-bottom: 20px;
+}
+
+/* Button styles */
+.button-group {
+  margin-bottom: 20px;
+  
+  .el-button {
+    margin-right: 10px;
+  }
+}
+
+/* Search form styles */
+.search-form {
+  margin-bottom: 20px;
+  
+  .el-form-item {
+    margin-right: 20px;
+    margin-bottom: 18px;
+  }
+}
+
+/* Pagination styles */
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+} 
