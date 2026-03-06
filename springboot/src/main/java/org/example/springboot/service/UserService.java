@@ -340,6 +340,13 @@ public class UserService {
                 throw new ServiceException("学号已存在");
             }
 
+            // 检查身份证是否存在
+            if (StringUtils.isNotBlank(student.getIdCard())) {
+                if (studentMapper.selectOne(new LambdaQueryWrapper<Student>().eq(Student::getIdCard, student.getIdCard())) != null) {
+                    throw new ServiceException("该身份证号已被注册");
+                }
+            }
+
             // 检查班级是否存在
             if (classMapper.selectById(student.getClassId()) == null) {
                 throw new ServiceException("班级不存在");

@@ -70,20 +70,7 @@ public class StudentService {
             if (classId != null) {
                 queryWrapper.eq(Student::getClassId, classId);
             }
-//            if(StringUtils.isNotBlank(headerTeacherId)){
-//                try {
-//                    Long teacherId = Long.valueOf(headerTeacherId);
-//                    List<Long> clazzIds = classMapper.selectList(new LambdaQueryWrapper<Class>().eq(Class::getHeadTeacherId, teacherId)).stream().map(Class::getId).toList();
-//                    if(!clazzIds.isEmpty()){
-//                        queryWrapper.in(Student::getClassId, clazzIds);
-//                    }else{
-//                        return page;
-//                    }
-//                } catch (NumberFormatException exception) {
-//                    // 如果headerTeacherId不是有效的Long，返回空结果
-//                    return page;
-//                }
-//            }
+
             if(StringUtils.isNotBlank(headerTeacherId)){
                 try {
                     Long teacherId = Long.valueOf(headerTeacherId);
@@ -262,6 +249,15 @@ public class StudentService {
         if (studentMapper.selectCount(queryWrapper) > 0) {
             throw new ServiceException("学号已存在");
         }
+
+        // 检查身份证号是否已存在
+        if (StringUtils.isNotBlank(student.getIdCard())) {
+            LambdaQueryWrapper<Student> idCardWrapper = new LambdaQueryWrapper<>();
+            idCardWrapper.eq(Student::getIdCard, student.getIdCard());
+            if (studentMapper.selectCount(idCardWrapper) > 0) {
+                throw new ServiceException("该身份证号已存在");
+            }
+        }
         
         // 检查班级是否存在
         if (classMapper.selectById(student.getClassId()) == null) {
@@ -296,6 +292,16 @@ public class StudentService {
                    .ne(Student::getId, student.getId());
         if (studentMapper.selectCount(queryWrapper) > 0) {
             throw new ServiceException("学号已被其他学生使用");
+        }
+
+        // 检查身份证是否已被其他学生使用
+        if (StringUtils.isNotBlank(student.getIdCard())) {
+            LambdaQueryWrapper<Student> idCardWrapper = new LambdaQueryWrapper<>();
+            idCardWrapper.eq(Student::getIdCard, student.getIdCard())
+                    .ne(Student::getId, student.getId()); // 关键：排除自己
+            if (studentMapper.selectCount(idCardWrapper) > 0) {
+                throw new ServiceException("该身份证号已被其他学生使用");
+            }
         }
         
         // 检查班级是否存在
