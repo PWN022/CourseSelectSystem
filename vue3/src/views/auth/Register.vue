@@ -101,7 +101,7 @@
         </el-form-item>
         <el-form-item prop="title">
           <el-select v-model="registerForm.title" placeholder="请选择职称">
-            <el-option label="老师" value="老师" />
+            <el-option label="讲师" value="讲师" />
             <el-option label="副教授" value="副教授" />
             <el-option label="教授" value="教授" />
           </el-select>

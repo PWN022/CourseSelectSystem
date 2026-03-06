@@ -1,44 +1,49 @@
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   $colors: (
     'primary': (
-      'base': #1976D2, // 教育蓝色，给人专业、可靠的感觉
+      'base': #2b579a, // 【修改为教务蓝】给人严谨、专业、学术的感觉
     ),
     'success': (
-      'base': #4CAF50, // 清新绿色，表示完成、通过
+      'base': #4CAF50, 
     ),
     'warning': (
-      'base': #FF9800, // 温和的橙色，用于提醒和警告
+      'base': #FF9800, 
     ),
     'danger': (
-      'base': #F44336, // 鲜明的红色，用于错误和危险操作
+      'base': #F44336, 
     ),
     'info': (
-      'base': #607D8B, // 中性蓝灰色，用于普通信息展示
+      'base': #607D8B, 
     )
   ),
 );
 
-/* 只需要重写你需要的即可 */
 @use "element-plus/theme-chalk/src/index.scss" as *;
+
+/* 强制通过 CSS 变量覆盖，确保全局生效 */
+:root {
+  --el-color-primary: #2b579a;
+  --el-color-primary-light-3: #587ebd;
+  --el-color-primary-light-5: #82a1cf;
+  --el-color-primary-light-7: #acbfe0;
+  --el-color-primary-light-9: #eaf0f8;
+  --el-color-primary-dark-2: #1e3f70;
+}
 
 .el-card {
   border: none !important;
-  box-shadow: none !important;
-
-  &:hover {
-    box-shadow: none !important;
-  }
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05) !important; // 稍微加一点微弱阴影，更有质感
+  border-radius: 4px; // 方正一点的卡片
 }
+
 .el-select{
   width: 150px !important;
 }
 
-// // 如果需要，可以在最后添加额外的 switch 样式覆盖
- .el-switch__core .el-switch__action{
+.el-switch__core .el-switch__action{
   border-radius: 50% !important;
 }
 
-// 添加 radio 样式覆盖
 .el-radio__inner {
   border-radius: 50% !important;
   &::after {
@@ -46,47 +51,46 @@
   }
 }
 
-// 添加对话框样式覆盖
+// 对话框样式覆盖 - 更加正式
 .el-dialog {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
-  
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 6px;
+
   .el-dialog__header {
     margin: 0;
-    padding: 20px 24px;
+    padding: 15px 20px;
     border-bottom: 1px solid #ebeef5;
-    
+    background-color: #f8f9fb; // 表头带点浅灰背景
+    border-radius: 6px 6px 0 0;
+
     .el-dialog__title {
       font-size: 16px;
-      font-weight: 600;
+      font-weight: bold;
+      color: #333;
     }
   }
-  
+
   .el-dialog__body {
     padding: 24px;
   }
-  
+
   .el-dialog__footer {
-    padding: 16px 24px;
+    padding: 12px 20px;
     border-top: 1px solid #ebeef5;
+    background-color: #f8f9fb;
+    border-radius: 0 0 6px 6px;
   }
 }
 
-// 添加表单样式覆盖
+// 表单样式覆盖
 .el-form {
-  // 表单项样式
   .el-form-item {
-    margin-bottom: 24px;
-    
-    // 表单标签样式
+    margin-bottom: 22px;
+
     .el-form-item__label {
-      font-weight: 500;
-      color: #333;
+      font-weight: bold; // 表单标签加粗，显得严谨
+      color: #444;
       padding-bottom: 8px;
-    }
-    
-    // 错误提示样式
-    .el-form-item__error {
-      padding-top: 4px;
     }
   }
 }
@@ -96,56 +100,19 @@
   .el-input__wrapper {
     box-shadow: 0 0 0 1px #dcdfe6 inset;
     transition: all 0.2s;
-    
+    border-radius: 4px;
+
     &:hover {
-      box-shadow: 0 0 0 1px #2B5BA1 inset;
+      box-shadow: 0 0 0 1px #2b579a inset;
     }
-    
+
     &.is-focus {
-      box-shadow: 0 0 0 1px #2B5BA1 inset !important;
+      box-shadow: 0 0 0 1px #2b579a inset !important;
     }
   }
-  
-  // 禁用状态样式
+
   &.is-disabled .el-input__wrapper {
     background-color: #f5f7fa;
     box-shadow: 0 0 0 1px #e4e7ed inset;
   }
 }
-
-// 表单内按钮组样式
-.el-form-item__content {
-  .el-button + .el-button {
-    margin-left: 12px;
-  }
-}
-
-// 必填星号样式
-.el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
-  color: #F56C6C;
-}
-
-/* Element Plus Variables */
-
-/* Theme Color */
-$--color-primary: #409EFF;
-$--color-success: #67C23A;
-$--color-warning: #E6A23C;
-$--color-danger: #F56C6C;
-$--color-info: #909399;
-
-/* Typography */
-$--font-path: 'element-plus/lib/theme-chalk/fonts';
-$--font-size-base: 14px;
-$--font-weight-primary: 500;
-
-/* Border */
-$--border-radius-base: 4px;
-$--border-color-base: #DCDFE6;
-
-/* Box-shadow */
-$--box-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-$--box-shadow-dark: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.12);
-
-/* Background */
-$--background-color-base: #F5F7FA;

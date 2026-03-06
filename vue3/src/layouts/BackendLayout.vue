@@ -107,56 +107,82 @@ const handleCommand = (command) => {
 </script>
 
 <style lang="scss" scoped>
+/* BackendLayout.vue 的样式替换部分 */
 .backend-layout {
   display: flex;
   height: 100vh;
-  
+
   .main-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    
+
+    /* 重点改造：顶部 Header 变成教务深蓝色 */
     .header {
       height: 60px;
-      background-color: #fff;
-      box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+      background-color: #2b579a; /* 教务蓝 */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 20px;
-      
+      z-index: 10;
+
       .left {
         display: flex;
         align-items: center;
-        
+
+        /* 让折叠侧边栏的按钮变成白色 */
+        .el-button {
+          color: #ffffff;
+
+          &:hover {
+            color: #d1e3fb;
+          }
+        }
+
         .breadcrumb {
           margin-left: 20px;
+          color: #ffffff; /* 面包屑文字变白 */
+          font-weight: 500;
+          letter-spacing: 1px;
         }
       }
-      
+
       .right {
         .avatar-container {
           display: flex;
           align-items: center;
           cursor: pointer;
-          
+          padding: 4px 10px;
+          border-radius: 4px;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* 悬浮时带点透明白底 */
+          }
+
           .username {
             margin: 0 10px;
-            color: #606266;
+            color: #ffffff; /* 用户名变白 */
+            font-weight: 500;
+          }
+
+          /* 右侧下拉箭头变白 */
+          .el-icon {
+            color: #ffffff;
           }
         }
       }
     }
-    
+
     .content {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
-      background-color: #f0f2f5;
+      background-color: #f0f2f5; /* 保持浅灰背景，突显白色的内容卡片 */
     }
   }
 }
-
-
 </style>

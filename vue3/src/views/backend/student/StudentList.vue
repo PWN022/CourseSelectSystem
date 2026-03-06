@@ -47,7 +47,7 @@
       <!--后添加-->
       <el-table-column label="学生姓名" width="120">
         <template #default="scope">
-          {{ scope.row?.studentName || '' }}
+          {{ scope.row?.name || scope.row?.username || '未命名' }}
         </template>
       </el-table-column>
       <el-table-column prop="gender" label="性别" width="80">

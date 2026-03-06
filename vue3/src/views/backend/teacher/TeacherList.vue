@@ -32,6 +32,11 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="teacherNo" label="教师编号" width="120" />
+      <el-table-column label="教师姓名" width="150">
+        <template #default="scope">
+          {{ getUserRealName(scope.row.userId) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="gender" label="性别" width="80">
         <template #default="scope">
           {{ getGenderLabel(scope.row.gender) }}
@@ -189,6 +194,19 @@ const formatDateTime = (dateTime) => {
   const minutes = String(date.getMinutes()).padStart(2, '0')
   return `${year}-${month}-${day} ${hours}:${minutes}`
 }
+
+// 通过 userId 从 userList 中匹配真实中文姓名
+const getUserRealName = (userId) => {
+  if (!userId) return '未知';
+  // 在已获取的用户列表中查找对应 userId 的用户
+  const user = userList.value.find(u => u.id === userId);
+
+  if (user) {
+    // 如果有中文真实姓名(name)就显示中文，没有填的话再退一步显示账号(username)
+    return user.name ? user.name : user.username;
+  }
+  return '未知';
+};
 
 // 获取教师列表
 const fetchTeachers = async () => {

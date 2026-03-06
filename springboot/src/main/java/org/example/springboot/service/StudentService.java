@@ -70,17 +70,58 @@ public class StudentService {
             if (classId != null) {
                 queryWrapper.eq(Student::getClassId, classId);
             }
+//            if(StringUtils.isNotBlank(headerTeacherId)){
+//                try {
+//                    Long teacherId = Long.valueOf(headerTeacherId);
+//                    List<Long> clazzIds = classMapper.selectList(new LambdaQueryWrapper<Class>().eq(Class::getHeadTeacherId, teacherId)).stream().map(Class::getId).toList();
+//                    if(!clazzIds.isEmpty()){
+//                        queryWrapper.in(Student::getClassId, clazzIds);
+//                    }else{
+//                        return page;
+//                    }
+//                } catch (NumberFormatException exception) {
+//                    // 如果headerTeacherId不是有效的Long，返回空结果
+//                    return page;
+//                }
+//            }
             if(StringUtils.isNotBlank(headerTeacherId)){
                 try {
                     Long teacherId = Long.valueOf(headerTeacherId);
-                    List<Long> clazzIds = classMapper.selectList(new LambdaQueryWrapper<Class>().eq(Class::getHeadTeacherId, teacherId)).stream().map(Class::getId).toList();
+                    // 使用 Set 存储学生 ID 以自动去重
+                    Set<Long> studentIds = new HashSet<>();
+
+                    // 【精确修改 1】：查询该教师担任班主任的班级学生
+                    List<Long> clazzIds = classMapper.selectList(
+                            new LambdaQueryWrapper<Class>().eq(Class::getHeadTeacherId, teacherId)
+                    ).stream().map(Class::getId).toList();
+
                     if(!clazzIds.isEmpty()){
-                        queryWrapper.in(Student::getClassId, clazzIds);
-                    }else{
+                        List<Student> studentsFromClass = studentMapper.selectList(
+                                new LambdaQueryWrapper<Student>().in(Student::getClassId, clazzIds)
+                        );
+                        studentIds.addAll(studentsFromClass.stream().map(Student::getId).toList());
+                    }
+
+                    // 【精确修改 2】：查询选修了“该教师”课程且状态为“已通过”的学生
+                    // 直接匹配 StudentCourse 实体类中的 teacherId 字段
+                    List<Long> courseStudentIds = studentCourseMapper.selectList(
+                            new LambdaQueryWrapper<StudentCourse>()
+                                    .eq(StudentCourse::getTeacherId, teacherId) // 核心：直接锁定当前教师
+                                    .eq(StudentCourse::getStatus, "已通过")       // 核心：过滤审批状态
+                    ).stream().map(StudentCourse::getStudentId).toList();
+
+                    if (!courseStudentIds.isEmpty()) {
+                        studentIds.addAll(courseStudentIds);
+                    }
+
+                    // 【精确修改 3】：应用过滤条件
+                    if (!studentIds.isEmpty()) {
+                        queryWrapper.in(Student::getId, studentIds);
+                    } else {
+                        // 如果既没带班级，也没有选课学生，直接返回空分页结果
                         return page;
                     }
                 } catch (NumberFormatException exception) {
-                    // 如果headerTeacherId不是有效的Long，返回空结果
                     return page;
                 }
             }

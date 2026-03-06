@@ -61,9 +61,9 @@ public class TeacherService {
         if (StringUtils.isNotBlank(title)) {
             queryWrapper.like(Teacher::getTitle, title);
         }
-        
-        // Order by create time descending
-        queryWrapper.orderByDesc(Teacher::getCreateTime);
+
+        // 改为按教师编号升序排列（从小到大），与学生列表保持一致
+        queryWrapper.orderByAsc(Teacher::getTeacherNo);
         
         Page<Teacher> resultPage = teacherMapper.selectPage(page, queryWrapper);
 

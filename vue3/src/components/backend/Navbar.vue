@@ -101,14 +101,15 @@ const handleLogout = () => {
 </script>
 
 <style lang="scss" scoped>
+/* Navbar.vue 的样式替换部分 */
 .navbar {
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background: #ffffff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  background: #2b579a; /* 变为教务蓝 */
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   z-index: 10;
 
   .left-menu {
@@ -123,26 +124,32 @@ const handleLogout = () => {
       cursor: pointer;
       padding: 8px;
       border-radius: 4px;
-      color: #666;
+      color: #ffffff; /* 图标变白 */
       height: 32px;
       width: 32px;
-      
+
       &:hover {
-        background: #f6f6f6;
+        background: rgba(255,255,255,0.1);
       }
     }
 
+    /* 面包屑文字全部变白 */
     :deep(.el-breadcrumb__inner) {
-      color: #666;
+      color: #e4e7ed !important;
       line-height: 32px;
-      
+      font-weight: 500;
+
       &.is-link {
-        color: #999;
-        
+        color: #ffffff !important;
+
         &:hover {
-          color: #1890ff;
+          color: #d1e3fb !important;
         }
       }
+    }
+
+    :deep(.el-breadcrumb__separator) {
+      color: #e4e7ed;
     }
   }
 
@@ -156,18 +163,18 @@ const handleLogout = () => {
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      color: #666;
+      color: #ffffff; /* 变白 */
       border-radius: 4px;
       transition: all 0.3s;
       height: 32px;
       width: 32px;
-      
+
       &:hover {
-        background: #f6f6f6;
-        color: #333;
+        background: rgba(255,255,255,0.1);
+        color: #ffffff;
       }
     }
-    
+
     .avatar-wrapper {
       display: flex;
       align-items: center;
@@ -176,20 +183,21 @@ const handleLogout = () => {
       cursor: pointer;
       border-radius: 4px;
       transition: all 0.3s;
-      
+
       &:hover {
-        background: #f6f6f6;
+        background: rgba(255,255,255,0.1);
       }
-      
+
       .user-name {
         margin: 0 8px;
         font-size: 14px;
-        color: #666;
+        color: #ffffff; /* 用户名变白 */
+        font-weight: bold;
         line-height: 32px;
       }
 
       .el-icon {
-        color: #999;
+        color: #ffffff; /* 箭头变白 */
         display: flex;
         align-items: center;
       }
@@ -202,7 +210,7 @@ const handleLogout = () => {
     gap: 8px;
     padding: 8px 16px;
     height: 40px;
-    
+
     .el-icon {
       margin-right: 4px;
       display: flex;
@@ -210,4 +218,4 @@ const handleLogout = () => {
     }
   }
 }
-</style> 
+</style>
