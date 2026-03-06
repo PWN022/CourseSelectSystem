@@ -12,6 +12,7 @@
       <change beforePath="$PROJECT_DIR$/vue3/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue3/src/assets/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/src/assets/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/src/components/HelloWorld.vue" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/src/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/src/router/index.js" afterDir="false" />
@@ -108,7 +109,7 @@
       <workItem from="1772635325388" duration="471000" />
       <workItem from="1772672670693" duration="5538000" />
       <workItem from="1772763512780" duration="513000" />
-      <workItem from="1772764261856" duration="6543000" />
+      <workItem from="1772764261856" duration="9432000" />
     </task>
     <servers />
   </component>

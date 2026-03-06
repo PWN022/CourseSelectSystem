@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar-container" :class="{ 'is-collapsed': isCollapsed }">
     <div class="logo">
-      <span class="logo-icon">🖥️</span>
+      <img src="@/assets/logo.png" class="logo-img" alt="Logo" />
       <span class="logo-text" v-show="!isCollapsed">高校课程管理系统</span>
     </div>
     <div class="menu-wrapper">
@@ -219,9 +219,10 @@ const activeTextColor = '#1890ff'  // 蓝色激活
       padding: 0;
       justify-content: center;
 
-      .logo-icon {
-        margin: 0;
-        font-size: 28px;
+      .logo-img {
+        margin-right: 0;
+        width: 32px;
+        height: auto;
       }
     }
 
@@ -247,11 +248,13 @@ const activeTextColor = '#1890ff'  // 蓝色激活
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    .logo-icon {
-      font-size: 18px;
+    .logo-img {
+      width: 24px;
+      height: 24px;
       margin-right: 10px;
-      transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      color: #1890ff;
+      border-radius: 4px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      object-fit: cover;
     }
 
     .logo-text {

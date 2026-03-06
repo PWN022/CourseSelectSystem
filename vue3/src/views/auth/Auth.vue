@@ -2,20 +2,20 @@
   <div class="auth-container">
     <div class="auth-box">
       <div class="auth-header" v-if="showHeader">
-        <div class="logo">🖥️</div>
+        <img src="@/assets/logo.png" class="logo-img" alt="Logo" />
         <h1 class="title">高校课程管理系统</h1>
         <div class="subtitle">Course Selection System</div>
       </div>
-      
+
       <el-form :model="formData" :rules="rules" ref="formRef" class="auth-form">
         <slot name="form-items"></slot>
-        
+
         <el-form-item>
           <el-button type="primary" :loading="loading" @click="handleSubmit" class="auth-button">
             {{ submitText }}
           </el-button>
         </el-form-item>
-        
+
         <div class="auth-links">
           <slot name="auth-links"></slot>
         </div>
@@ -73,7 +73,9 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  //background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  background: url('@/assets/bg-1920.png') no-repeat center center;
+  background-size: cover;
   padding: 20px;
 }
 
@@ -81,7 +83,8 @@ defineExpose({
   width: 100%;
   max-width: 420px;
   padding: 40px 30px;
-  background: white;
+  /* 将 white 改为带透明度的白色 */
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
@@ -90,9 +93,11 @@ defineExpose({
   text-align: center;
   margin-bottom: 40px;
 
-  .logo {
-    font-size: 48px;
+  .logo-img{
+    width: 64px; /* 根据您的 logo 实际比例调整宽度 */
+    height: auto;
     margin-bottom: 16px;
+    border-radius: 8px; /* 如果 logo 是方形的，可以加个圆角让它更好看 */
   }
 
   .title {
@@ -123,11 +128,11 @@ defineExpose({
       box-shadow: 0 0 0 1px #e5e7eb;
       padding: 8px 12px;
       border-radius: 8px;
-      
+
       &:hover {
         box-shadow: 0 0 0 1px var(--el-input-hover-border-color);
       }
-      
+
       &.is-focus {
         box-shadow: 0 0 0 2px var(--el-input-focus-border-color);
       }
@@ -143,11 +148,11 @@ defineExpose({
   border-radius: 8px;
   background: #3b82f6;
   border: none;
-  
+
   &:hover {
     background: #2563eb;
   }
-  
+
   &:active {
     background: #1d4ed8;
   }
@@ -157,15 +162,15 @@ defineExpose({
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
-  
+
   a {
     color: #3b82f6;
     text-decoration: none;
     margin: 0 8px;
-    
+
     &:hover {
       text-decoration: underline;
     }
   }
 }
-</style> 
+</style>

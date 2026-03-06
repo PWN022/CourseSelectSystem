@@ -275,7 +275,7 @@ const fetchScores = async () => {
   try {
     await request.get('/score/page', {
       currentPage: currentPage.value,
-      size: pageSize.value,
+      pageSize: pageSize.value,
       studentId: searchForm.studentId || null,
       teacherId: userStore.isTeacher ?  userStore.teacherInfo?.id:null,
       courseId: searchForm.courseId || null,
