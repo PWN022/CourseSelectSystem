@@ -50,6 +50,9 @@ public class Course {
     @Schema(description = "选课学生数量")
     private Integer studentCount;
 
+    @Schema(description = "最大选课人数")
+    private Integer maxCapacity;
+
     @TableField(exist = false)
     @Schema(description = "当前页码")
     private Integer currentPage;

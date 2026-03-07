@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 50726
  Source Host           : localhost:3306
- Source Schema         : studentcourse
+ Source Schema         : course_select
 
  Target Server Type    : MySQL
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 06/03/2026 20:20:05
+ Date: 07/03/2026 10:47:16
 */
 
 SET NAMES utf8mb4;
@@ -164,6 +164,7 @@ CREATE TABLE `course`  (
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '课程描述',
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `max_capacity` int(11) NULL DEFAULT 50 COMMENT '最大选课人数',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_course_code`(`course_code`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '课程信息表' ROW_FORMAT = DYNAMIC;
@@ -171,15 +172,15 @@ CREATE TABLE `course`  (
 -- ----------------------------
 -- Records of course
 -- ----------------------------
-INSERT INTO `course` VALUES (1, 'CS301', 'Python数据分析', 2.50, 40, '选修课', '使用Python进行数据分析和可视化', '2024-06-01 09:00:00', '2024-06-01 09:00:00');
-INSERT INTO `course` VALUES (2, 'CS302', 'Web前端开发', 2.50, 40, '选修课', 'HTML、CSS、JavaScript基础与实战', '2024-06-01 09:10:00', '2024-06-01 09:10:00');
-INSERT INTO `course` VALUES (3, 'CS303', '移动应用开发', 2.50, 40, '选修课', 'Android/iOS应用开发入门', '2024-06-01 09:20:00', '2024-06-01 09:20:00');
-INSERT INTO `course` VALUES (4, 'CS304', '人工智能导论', 2.00, 32, '选修课', 'AI基础概念与应用场景', '2024-06-01 09:30:00', '2024-06-01 09:30:00');
-INSERT INTO `course` VALUES (5, 'PE101', '健身与形体', 1.50, 32, '选修课', '科学健身方法与体型管理', '2024-06-01 10:00:00', '2024-06-01 10:00:00');
-INSERT INTO `course` VALUES (6, 'TE101', '无人机航拍', 1.50, 28, '选修课', '无人机操控与航拍技巧', '2024-06-01 10:10:00', '2024-06-01 10:10:00');
-INSERT INTO `course` VALUES (7, 'ME101', '自媒体运营', 2.00, 36, '选修课', '短视频、公众号等平台运营', '2024-06-01 10:20:00', '2024-06-01 10:20:00');
-INSERT INTO `course` VALUES (8, 'TA101', '红酒文化与品鉴', 1.00, 20, '选修课', '红酒基础知识与品鉴技巧', '2024-06-01 10:30:00', '2024-06-01 10:30:00');
-INSERT INTO `course` VALUES (9, 'ESPCE301', '高级英语', 10.00, 180, '选修课', '学术英语语言知识与阅读技能、学习策略和学术交际能力为主要内容', '2025-06-01 11:28:41', '2026-03-06 11:29:06');
+INSERT INTO `course` VALUES (1, 'CS301', 'Python数据分析', 2.50, 40, '选修课', '使用Python进行数据分析和可视化', '2024-06-01 09:00:00', '2024-06-01 09:00:00', 50);
+INSERT INTO `course` VALUES (2, 'CS302', 'Web前端开发', 2.50, 40, '选修课', 'HTML、CSS、JavaScript基础与实战', '2024-06-01 09:10:00', '2024-06-01 09:10:00', 50);
+INSERT INTO `course` VALUES (3, 'CS303', '移动应用开发', 2.50, 40, '选修课', 'Android/iOS应用开发入门', '2024-06-01 09:20:00', '2024-06-01 09:20:00', 50);
+INSERT INTO `course` VALUES (4, 'CS304', '人工智能导论', 2.00, 32, '选修课', 'AI基础概念与应用场景', '2024-06-01 09:30:00', '2024-06-01 09:30:00', 50);
+INSERT INTO `course` VALUES (5, 'PE101', '健身与形体', 1.50, 32, '选修课', '科学健身方法与体型管理', '2024-06-01 10:00:00', '2024-06-01 10:00:00', 50);
+INSERT INTO `course` VALUES (6, 'TE101', '无人机航拍', 1.50, 28, '选修课', '无人机操控与航拍技巧', '2024-06-01 10:10:00', '2024-06-01 10:10:00', 50);
+INSERT INTO `course` VALUES (7, 'ME101', '自媒体运营', 2.00, 36, '选修课', '短视频、公众号等平台运营', '2024-06-01 10:20:00', '2024-06-01 10:20:00', 50);
+INSERT INTO `course` VALUES (8, 'TA101', '红酒文化与品鉴', 1.00, 20, '选修课', '红酒基础知识与品鉴技巧', '2024-06-01 10:30:00', '2024-06-01 10:30:00', 50);
+INSERT INTO `course` VALUES (9, 'ESPCE301', '高级英语', 10.00, 180, '选修课', '学术英语语言知识与阅读技能、学习策略和学术交际能力为主要内容', '2025-06-01 11:28:41', '2026-03-07 10:09:40', 5);
 
 -- ----------------------------
 -- Table structure for score
@@ -298,7 +299,7 @@ CREATE TABLE `student_course`  (
   CONSTRAINT `fk_sc_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_sc_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_sc_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生选课表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生选课表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of student_course
@@ -335,11 +336,14 @@ INSERT INTO `student_course` VALUES (29, 14, 4, 4, '2024-2025-1', '已通过', '
 INSERT INTO `student_course` VALUES (30, 14, 6, 6, '2024-2025-1', '待审批', '2024-08-28 10:11:00');
 INSERT INTO `student_course` VALUES (33, 12, 9, 11, '2024-2025-2', '已通过', '2026-03-06 11:44:32');
 INSERT INTO `student_course` VALUES (34, 14, 5, 12, '2024-2025-2', '已通过', '2026-03-06 11:57:26');
-INSERT INTO `student_course` VALUES (35, 1, 9, 11, '2025-2026-1', '待审批', '2026-03-06 17:58:21');
-INSERT INTO `student_course` VALUES (36, 15, 9, 11, '2025-2026-1', '待审批', '2026-03-06 18:05:39');
+INSERT INTO `student_course` VALUES (35, 1, 9, 11, '2025-2026-1', '已通过', '2026-03-06 17:58:21');
+INSERT INTO `student_course` VALUES (36, 15, 9, 11, '2025-2026-1', '已通过', '2026-03-06 18:05:39');
 INSERT INTO `student_course` VALUES (37, 15, 5, 12, '2024-2025-2', '待审批', '2026-03-06 18:05:40');
 INSERT INTO `student_course` VALUES (38, 16, 5, 12, '2024-2025-2', '待审批', '2026-03-06 18:08:02');
 INSERT INTO `student_course` VALUES (39, 16, 3, 3, '2024-2025-1', '待审批', '2026-03-06 18:09:29');
+INSERT INTO `student_course` VALUES (40, 4, 9, 11, '2025-2026-1', '已通过', '2026-03-06 22:32:05');
+INSERT INTO `student_course` VALUES (41, 13, 9, 11, '2025-2026-1', '已通过', '2026-03-07 10:14:46');
+INSERT INTO `student_course` VALUES (42, 16, 9, 11, '2025-2026-1', '已拒绝', '2026-03-07 10:16:31');
 
 -- ----------------------------
 -- Table structure for teacher

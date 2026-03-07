@@ -110,10 +110,12 @@ public class CourseService {
         course.setTeacherCount(teacherCount);
         
         // 查询选课学生数量
-        LambdaQueryWrapper<StudentCourse> studentQueryWrapper = new LambdaQueryWrapper<>();
-        studentQueryWrapper.eq(StudentCourse::getCourseId, course.getId());
-        int studentCount = studentCourseMapper.selectCount(studentQueryWrapper).intValue();
-        course.setStudentCount(studentCount);
+        LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
+        countWrapper.eq(StudentCourse::getCourseId, course.getId())
+                .and(w -> w.isNull(StudentCourse::getStatus).or().ne(StudentCourse::getStatus, "已拒绝"));
+
+        Long count = studentCourseMapper.selectCount(countWrapper);
+        course.setStudentCount(count != null ? count.intValue() : 0);
         
         return course;
     }

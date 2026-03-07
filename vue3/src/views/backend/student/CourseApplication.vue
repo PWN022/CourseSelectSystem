@@ -44,13 +44,27 @@
         <el-table-column prop="credit" label="学分" width="80"></el-table-column>
         <el-table-column prop="hours" label="学时" width="80"></el-table-column>
         <el-table-column prop="courseType" label="课程类型" ></el-table-column>
+        <el-table-column label="容量 / 余量" width="120" align="center">
+          <template #default="scope">
+            <span v-if="scope.row.maxCapacity">
+              {{ scope.row.maxCapacity }} /
+              <span :style="{ color: (scope.row.maxCapacity - (scope.row.studentCount || 0)) <= 0 ? '#F56C6C' : '#67C23A', fontWeight: 'bold' }">
+                {{ Math.max(0, scope.row.maxCapacity - (scope.row.studentCount || 0)) }}
+              </span>
+            </span>
+            <span v-else>不限</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="120">
           <template #default="scope">
             <el-button
-              size="small"
-              type="primary"
-              @click="applyCourse(scope.row)"
-            >申请选课</el-button>
+                size="small"
+                :type="scope.row.maxCapacity && (scope.row.maxCapacity - (scope.row.studentCount || 0)) <= 0 ? 'info' : 'primary'"
+                :disabled="scope.row.maxCapacity && (scope.row.maxCapacity - (scope.row.studentCount || 0)) <= 0"
+                @click="applyCourse(scope.row)"
+            >
+              {{ scope.row.maxCapacity && (scope.row.maxCapacity - (scope.row.studentCount || 0)) <= 0 ? '已满' : '申请选课' }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

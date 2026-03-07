@@ -336,7 +336,7 @@ public class StudentCourseService  {
         if (teacherCourseMapper.selectCount(teacherCourseQuery) == 0) {
             throw new ServiceException("该教师在该学期未教授此课程");
         }
-        
+
         // 检查是否已选择相同的课程
         LambdaQueryWrapper<StudentCourse> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StudentCourse::getStudentId, studentCourse.getStudentId())
@@ -345,7 +345,22 @@ public class StudentCourseService  {
         if (studentCourseMapper.selectCount(queryWrapper) > 0) {
             throw new ServiceException("该学生在该学期已选择此课程");
         }
-        
+
+        // ================== 【修改单科申请容量校验】 ==================
+        Course course = courseMapper.selectById(studentCourse.getCourseId());
+        if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
+            LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
+            countWrapper.eq(StudentCourse::getCourseId, studentCourse.getCourseId())
+                    .eq(StudentCourse::getSemester, studentCourse.getSemester())
+                    .ne(StudentCourse::getStatus, "已拒绝"); // 只要没被拒绝，就占一个名额
+
+            Long currentSelectedCount = studentCourseMapper.selectCount(countWrapper);
+            if (currentSelectedCount >= course.getMaxCapacity()) {
+                throw new ServiceException("抱歉，该课程名额已满（上限：" + course.getMaxCapacity() + "人）");
+            }
+        }
+        // ====================================================================
+
         // 设置状态为待审批
         studentCourse.setStatus("待审批");
         
@@ -401,6 +416,21 @@ public class StudentCourseService  {
             if (studentCourseMapper.selectCount(queryWrapper) > 0) {
                 continue; // 已选择此课程，跳过
             }
+
+            // ================== 【批量申请的容量校验】 ==================
+            Course course = courseMapper.selectById(courseId);
+            if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
+                LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
+                countWrapper.eq(StudentCourse::getCourseId, courseId)
+                        .eq(StudentCourse::getSemester, semester)
+                        .ne(StudentCourse::getStatus, "已拒绝");
+
+                Long currentSelectedCount = studentCourseMapper.selectCount(countWrapper);
+                if (currentSelectedCount >= course.getMaxCapacity()) {
+                    throw new ServiceException("课程《" + course.getCourseName() + "》名额已满（上限：" + course.getMaxCapacity() + "人），批量申请被阻断！");
+                }
+            }
+            // ======================================================================
             
             // 添加选课记录
             StudentCourse studentCourse = new StudentCourse();

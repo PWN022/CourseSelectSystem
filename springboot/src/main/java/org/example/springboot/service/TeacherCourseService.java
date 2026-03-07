@@ -31,6 +31,9 @@ public class TeacherCourseService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private org.example.springboot.mapper.StudentCourseMapper studentCourseMapper;
+
     /**
      * 分页查询教师课程信息
      * @param teacherId 教师ID
@@ -183,11 +186,11 @@ public class TeacherCourseService {
         Teacher teacher = teacherMapper.selectById(teacherCourse.getTeacherId());
         if (teacher != null) {
             User user = userMapper.selectById(teacher.getUserId());
-            if(user != null) {
+            if (user != null) {
                 teacherCourse.setTeacherName(user.getName());
             }
         }
-        
+
         // 填充课程信息
         Course course = courseMapper.selectById(teacherCourse.getCourseId());
         if (course != null) {
@@ -198,7 +201,24 @@ public class TeacherCourseService {
             teacherCourse.setHours(course.getHours());
             // 设置courseId字段，与id字段保持一致，用于前端兼容
             teacherCourse.setCourseId(course.getId());
+            // 新增
+            // 传递最大容量
+            teacherCourse.setMaxCapacity(course.getMaxCapacity());
         }
+
+        // ================== 【修改：统计当前已选人数】 ==================
+        if (teacherCourse.getCourseId() != null && teacherCourse.getSemester() != null) {
+            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<org.example.springboot.entity.StudentCourse> countWrapper = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
+
+            countWrapper.eq(org.example.springboot.entity.StudentCourse::getCourseId, teacherCourse.getCourseId())
+                    .eq(org.example.springboot.entity.StudentCourse::getSemester, teacherCourse.getSemester())
+                    // 【核心修改】：删除了 TeacherId 限制，并改成“不等于已拒绝”
+                    .ne(org.example.springboot.entity.StudentCourse::getStatus, "已拒绝");
+
+            Long count = studentCourseMapper.selectCount(countWrapper);
+            teacherCourse.setStudentCount(count != null ? count.intValue() : 0);
+        }
+        // ======================================================================
     }
 
     /**

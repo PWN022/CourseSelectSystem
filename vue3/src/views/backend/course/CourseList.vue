@@ -52,6 +52,11 @@
       <el-table-column prop="courseName" label="课程名称" width="180" />
       <el-table-column prop="credit" label="学分" width="80" />
       <el-table-column prop="hours" label="课时" width="80" />
+      <el-table-column prop="maxCapacity" label="容量" width="80">
+        <template #default="scope">
+          {{ scope.row.maxCapacity || '不限' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="courseType" label="课程类型" width="120" />
       <el-table-column prop="teacherCount" label="授课教师数" width="100" />
       <el-table-column prop="studentCount" label="选课学生数" width="100" />
@@ -122,6 +127,9 @@
         </el-form-item>
         <el-form-item label="课时" prop="hours">
           <el-input-number v-model="form.hours" :min="0" :max="200" :step="1" />
+        </el-form-item>
+        <el-form-item label="人数上限" prop="maxCapacity">
+          <el-input-number v-model="form.maxCapacity" :min="1" :max="500" :step="5" placeholder="留空或为0则不限制" />
         </el-form-item>
         <el-form-item label="课程类型" prop="courseType">
           <el-select
@@ -260,6 +268,7 @@ const form = reactive({
   courseName: "",
   credit: 3,
   hours: 48,
+  maxCapacity: 50,
   courseType: "",
   newCourseType: "",
   description: "",
@@ -400,7 +409,7 @@ const handleSelectionChange = (rows) => {
 const handleAdd = () => {
   isEdit.value = false;
   Object.keys(form).forEach((key) => {
-    form[key] = key === "credit" ? 3 : key === "hours" ? 48 : "";
+    form[key] = key === "credit" ? 3 : key === "hours" ? 48 : key == "maxCapacity" ? 50 : "";
   });
   dialogVisible.value = true;
 };

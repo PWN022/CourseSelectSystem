@@ -54,5 +54,11 @@ public class TeacherCourse {
     @Schema(description = "课时")
     private Integer hours;
 
+    @TableField(exist = false)
+    @Schema(description = "最大选课人数")
+    private Integer maxCapacity;
 
+    @TableField(exist = false)
+    @Schema(description = "已选学生数量")
+    private Integer studentCount;
 } 
