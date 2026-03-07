@@ -55,7 +55,7 @@ public class StudentCourseController {
     @Operation(summary = "学生选课")
     @PostMapping
     public Result<?> addStudentCourse(@RequestBody StudentCourse studentCourse) {
-        studentCourseService.addStudentCourse(studentCourse);
+        studentCourseService.applyCourse(studentCourse);
         return Result.success();
     }
     
@@ -102,7 +102,7 @@ public class StudentCourseController {
 
             String semester = (String) params.get("semester");
 
-            studentCourseService.batchAddStudentCourses(studentId, courseIds, teacherIds, semester);
+            studentCourseService.batchApplyCourses(studentId, courseIds, teacherIds, semester);
             return Result.success();
         } catch (NumberFormatException e) {
             return Result.error("参数格式错误：" + e.getMessage());

@@ -63,10 +63,12 @@ public class CourseService {
             teacherQueryWrapper.eq(TeacherCourse::getCourseId, course.getId());
             int teacherCount = teacherCourseMapper.selectCount(teacherQueryWrapper).intValue();
             course.setTeacherCount(teacherCount);
-            
+
             // 查询选课学生数量
             LambdaQueryWrapper<StudentCourse> studentQueryWrapper = new LambdaQueryWrapper<>();
-            studentQueryWrapper.eq(StudentCourse::getCourseId, course.getId());
+            studentQueryWrapper.eq(StudentCourse::getCourseId, course.getId())
+                    // 排除掉状态为“已拒绝”的记录，保证统计容量准确
+                    .and(w -> w.isNull(StudentCourse::getStatus).or().ne(StudentCourse::getStatus, "已拒绝"));
             int studentCount = studentCourseMapper.selectCount(studentQueryWrapper).intValue();
             course.setStudentCount(studentCount);
         }
@@ -112,11 +114,12 @@ public class CourseService {
         // 查询选课学生数量
         LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
         countWrapper.eq(StudentCourse::getCourseId, course.getId())
-                .and(w -> w.isNull(StudentCourse::getStatus).or().ne(StudentCourse::getStatus, "已拒绝"));
+                .in(StudentCourse::getStatus, "已通过", "待审批", "退课待审批");
 
         Long count = studentCourseMapper.selectCount(countWrapper);
         course.setStudentCount(count != null ? count.intValue() : 0);
-        
+        // ------------------------------------------
+
         return course;
     }
     

@@ -212,8 +212,8 @@ public class TeacherCourseService {
 
             countWrapper.eq(org.example.springboot.entity.StudentCourse::getCourseId, teacherCourse.getCourseId())
                     .eq(org.example.springboot.entity.StudentCourse::getSemester, teacherCourse.getSemester())
-                    // 【核心修改】：删除了 TeacherId 限制，并改成“不等于已拒绝”
-                    .ne(org.example.springboot.entity.StudentCourse::getStatus, "已拒绝");
+                    // 只要是这三个状态，统统算作占用名额
+                    .in(org.example.springboot.entity.StudentCourse::getStatus, "已通过", "待审批", "退课待审批");
 
             Long count = studentCourseMapper.selectCount(countWrapper);
             teacherCourse.setStudentCount(count != null ? count.intValue() : 0);

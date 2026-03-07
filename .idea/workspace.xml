@@ -6,6 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="cbe07639-f900-4001-8b13-22ff5ddd1ef7" name="更改" comment="">
       <change afterPath="$PROJECT_DIR$/vue3/src/assets/bg-1920.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/controller/StudentCourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/controller/StudentCourseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/CourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/CourseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/StudentCourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/StudentCourseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/TeacherCourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/TeacherCourseService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/babel.config.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/jsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/jsconfig.json" afterDir="false" />
@@ -26,7 +32,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/vue3" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -57,7 +63,7 @@
     &quot;Spring Boot.SpringbootApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/ALLDownload/AAA/基于Spring Boot+Vue的高校课程管理系统的设计与实现/vue3/src/assets&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/UncommonSoftWare/resporsity/基于Spring Boot+Vue的高校课程管理系统的设计与实现&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
@@ -114,6 +120,8 @@
       <workItem from="1772799515636" duration="157000" />
       <workItem from="1772807229066" duration="761000" />
       <workItem from="1772846530011" duration="4489000" />
+      <workItem from="1772851690210" duration="2648000" />
+      <workItem from="1772854482008" duration="460000" />
     </task>
     <servers />
   </component>

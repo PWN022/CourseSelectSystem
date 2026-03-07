@@ -249,6 +249,7 @@ const applyCourse = (course) => {
         successMsg: '申请提交成功',
         onSuccess: () => {
           fetchApplications() // 刷新申请列表
+          fetchCourses() // 刷新课程表
         }
       })
     } catch (error) {
@@ -298,6 +299,7 @@ const submitApplications = () => {
         successMsg: '批量申请提交成功',
         onSuccess: () => {
           fetchApplications() // 刷新申请列表
+          fetchCourses() // 刷新课程表
         }
       })
     } catch (error) {
