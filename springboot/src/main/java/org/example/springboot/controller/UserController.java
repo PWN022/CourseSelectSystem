@@ -101,13 +101,6 @@ public class UserController {
         return Result.success(list);
     }
 
-    @Operation(summary = "创建新用户")
-    @PostMapping("/add")
-    public Result<?> createUser(@RequestBody  User user) {
-        userService.createUser(user);
-        return Result.success("创建成功");
-    }
-
     @Operation(summary = "更新用户信息")
     @PutMapping("/{id}")
     public Result<?> updateUser(@PathVariable Long id, @RequestBody User user) {

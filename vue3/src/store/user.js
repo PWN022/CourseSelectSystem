@@ -154,7 +154,6 @@ export const useUserStore = defineStore('user', {
         throw error
       }
     },
-    // 注册
 
     // 退出登录
     async logout() {

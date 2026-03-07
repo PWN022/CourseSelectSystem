@@ -54,9 +54,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login").
-
-                        permitAll()  // 登录页面无需认证
                         .anyRequest().permitAll()  // 所有请求都公开访问
                 )
                 .csrf().disable();  // 禁用 CSRF 保护（仅用于开发环境）

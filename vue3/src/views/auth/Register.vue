@@ -128,7 +128,6 @@ import Auth from './Auth.vue'
 import {GENDER} from '@/constants/gender'
 
 const router = useRouter()
-const formRef = ref(null)
 const registerFormRef = ref(null)
 const loading = ref(false)
 const classesList = ref([])
@@ -262,7 +261,6 @@ const rules = {
 }
 
 const handleSubmit = (form) => {
-  formRef.value = form.value
   registerFormRef.value = form.value
   handleRegister()
 }

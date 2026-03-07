@@ -84,32 +84,6 @@ public class UserService {
         return users;
     }
 
-    public void createUser(User user) {
-        // 检查用户名是否存在
-        if (userMapper.selectOne(
-                new LambdaQueryWrapper<User>()
-                    .eq(User::getUsername, user.getUsername())
-            ) != null) {
-            throw new ServiceException("用户名已存在");
-        }
-        
-        // 检查邮箱是否被使用
-        if (userMapper.selectOne(
-                new LambdaQueryWrapper<User>()
-                    .eq(User::getEmail, user.getEmail())
-            ) != null) {
-            throw new ServiceException("邮箱已被使用");
-        }
-
-
-        user.setPassword(StringUtils.isNotBlank(user.getPassword()) ? user.getPassword() : DEFAULT_PWD);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        
-        if (userMapper.insert(user) <= 0) {
-            throw new ServiceException("用户创建失败");
-        }
-    }
-
     public void updateUser(Long id, User user) {
         // 检查用户是否存在
         if (userMapper.selectById(id) == null) {

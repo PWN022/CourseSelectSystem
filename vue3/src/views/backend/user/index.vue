@@ -25,9 +25,9 @@ const userStore = useUserStore()
 const activeTab = ref('users')
 
 // 判断是否有角色管理权限
-const hasRoleManagementPermission = computed(() => {
+computed(() => {
   return userStore.role === 'ADMIN'
-})
+});
 </script>
 
 <style lang="scss" scoped>

@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 07/03/2026 10:47:16
+ Date: 07/03/2026 16:49:31
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,7 @@ CREATE TABLE `attendance`  (
   INDEX `idx_course_id`(`course_id`) USING BTREE,
   CONSTRAINT `fk_attendance_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_attendance_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 83 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '考勤信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 84 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '考勤信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of attendance
@@ -121,6 +121,7 @@ INSERT INTO `attendance` VALUES (79, 13, 8, '2024-10-17', '出席', NULL, '2024-
 INSERT INTO `attendance` VALUES (80, 14, 4, '2024-09-18', '出席', NULL, '2024-09-18 13:30:00');
 INSERT INTO `attendance` VALUES (81, 14, 4, '2024-09-25', '出席', NULL, '2024-09-25 13:30:00');
 INSERT INTO `attendance` VALUES (82, 14, 4, '2024-10-16', '请假', '事假', '2024-10-16 13:25:00');
+INSERT INTO `attendance` VALUES (83, 14, 5, '2025-03-18', '出席', '', '2026-03-07 16:06:25');
 
 -- ----------------------------
 -- Table structure for class
@@ -145,10 +146,10 @@ CREATE TABLE `class`  (
 INSERT INTO `class` VALUES (1, '计算机科学与技术2024级1班', '2024级', '计算机科学与技术', 1, '2024-06-01 09:00:00', '2024-06-01 09:00:00');
 INSERT INTO `class` VALUES (2, '计算机科学与技术2024级2班', '2024级', '计算机科学与技术', 2, '2024-06-01 09:05:00', '2024-06-01 09:05:00');
 INSERT INTO `class` VALUES (3, '软件工程2024级1班', '2024级', '软件工程', 3, '2024-06-01 09:10:00', '2024-06-01 09:10:00');
-INSERT INTO `class` VALUES (4, '软件工程2024级2班', '2024级', '软件工程', 4, '2024-06-01 09:15:00', '2024-06-01 09:15:00');
-INSERT INTO `class` VALUES (5, '数据科学与大数据2024级1班', '2024级', '数据科学与大数据技术', 5, '2024-06-01 09:20:00', '2024-06-01 09:20:00');
-INSERT INTO `class` VALUES (6, '人工智能2024级1班', '2024级', '人工智能', 6, '2024-06-01 09:25:00', '2024-06-01 09:25:00');
-INSERT INTO `class` VALUES (7, '计算机科学与技术2025级1班', '2025级', '计算机科学与技术', 1, '2026-03-06 18:50:57', '2026-03-06 18:50:57');
+INSERT INTO `class` VALUES (4, '软件工程2024级2班', '2024级', '软件工程', 10, '2024-06-01 09:15:00', '2026-03-07 16:48:59');
+INSERT INTO `class` VALUES (5, '数据科学与大数据2024级1班', '2024级', '数据科学与大数据技术', 9, '2024-06-01 09:20:00', '2026-03-07 16:43:02');
+INSERT INTO `class` VALUES (6, '人工智能2024级1班', '2024级', '人工智能', 4, '2024-06-01 09:25:00', '2026-03-07 16:42:46');
+INSERT INTO `class` VALUES (7, '计算机科学与技术2025级1班', '2025级', '计算机科学与技术', 1, '2025-06-02 09:50:57', '2026-03-07 16:36:48');
 
 -- ----------------------------
 -- Table structure for course
@@ -167,7 +168,7 @@ CREATE TABLE `course`  (
   `max_capacity` int(11) NULL DEFAULT 50 COMMENT '最大选课人数',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_course_code`(`course_code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '课程信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '课程信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of course
@@ -181,6 +182,7 @@ INSERT INTO `course` VALUES (6, 'TE101', '无人机航拍', 1.50, 28, '选修课
 INSERT INTO `course` VALUES (7, 'ME101', '自媒体运营', 2.00, 36, '选修课', '短视频、公众号等平台运营', '2024-06-01 10:20:00', '2024-06-01 10:20:00', 50);
 INSERT INTO `course` VALUES (8, 'TA101', '红酒文化与品鉴', 1.00, 20, '选修课', '红酒基础知识与品鉴技巧', '2024-06-01 10:30:00', '2024-06-01 10:30:00', 50);
 INSERT INTO `course` VALUES (9, 'ESPCE301', '高级英语', 10.00, 180, '选修课', '学术英语语言知识与阅读技能、学习策略和学术交际能力为主要内容', '2025-06-01 11:28:41', '2026-03-07 10:09:40', 5);
+INSERT INTO `course` VALUES (10, 'SE202', '软件测试', 2.50, 40, '专业必修课', '测试策略、黑盒测试、白盒测试、自动化测试、性能测试、缺陷管理', '2024-06-01 10:30:00', '2026-03-07 16:48:13', 50);
 
 -- ----------------------------
 -- Table structure for score
@@ -203,7 +205,8 @@ CREATE TABLE `score`  (
   INDEX `idx_teacher_id`(`teacher_id`) USING BTREE,
   CONSTRAINT `fk_score_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_score_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_score_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_score_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_score_select` FOREIGN KEY (`student_id`, `course_id`, `semester`) REFERENCES `student_course` (`student_id`, `course_id`, `semester`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '成绩信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -258,7 +261,7 @@ CREATE TABLE `student`  (
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_student_class` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_student_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of student
@@ -279,6 +282,7 @@ INSERT INTO `student` VALUES (13, 'S20240913', 'M', '2003-10-08', '1101162003100
 INSERT INTO `student` VALUES (14, 'S20240914', 'F', '2005-07-22', '110117200507220142', '北京市平谷区滨河街道', 4, 23, '2024-08-26 13:40:00', '2024-09-30 16:20:00');
 INSERT INTO `student` VALUES (15, 'TEST002', 'M', '2001-12-31', '110101200201010015', '北京市东城区安定门街道', 7, 29, '2026-03-06 18:04:37', '2026-03-06 18:51:23');
 INSERT INTO `student` VALUES (16, 'TEST003', 'F', '2003-02-28', '110102200303010028', '北京市西城区西长安街街道', 7, 30, '2026-03-06 18:07:47', '2026-03-06 18:51:26');
+INSERT INTO `student` VALUES (17, 'TEST004', 'M', '2005-07-22', '110117200507230142', '北京市平谷区滨河街道', 7, 32, '2026-03-07 12:15:28', '2026-03-07 12:15:28');
 
 -- ----------------------------
 -- Table structure for student_course
@@ -299,7 +303,7 @@ CREATE TABLE `student_course`  (
   CONSTRAINT `fk_sc_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_sc_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_sc_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生选课表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生选课表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of student_course
@@ -334,16 +338,16 @@ INSERT INTO `student_course` VALUES (27, 13, 5, 5, '2024-2025-1', '已通过', '
 INSERT INTO `student_course` VALUES (28, 13, 8, 8, '2024-2025-1', '已通过', '2024-08-28 10:02:00');
 INSERT INTO `student_course` VALUES (29, 14, 4, 4, '2024-2025-1', '已通过', '2024-08-28 10:10:00');
 INSERT INTO `student_course` VALUES (30, 14, 6, 6, '2024-2025-1', '待审批', '2024-08-28 10:11:00');
-INSERT INTO `student_course` VALUES (33, 12, 9, 11, '2024-2025-2', '已通过', '2026-03-06 11:44:32');
 INSERT INTO `student_course` VALUES (34, 14, 5, 12, '2024-2025-2', '已通过', '2026-03-06 11:57:26');
 INSERT INTO `student_course` VALUES (35, 1, 9, 11, '2025-2026-1', '已通过', '2026-03-06 17:58:21');
 INSERT INTO `student_course` VALUES (36, 15, 9, 11, '2025-2026-1', '已通过', '2026-03-06 18:05:39');
-INSERT INTO `student_course` VALUES (37, 15, 5, 12, '2024-2025-2', '待审批', '2026-03-06 18:05:40');
-INSERT INTO `student_course` VALUES (38, 16, 5, 12, '2024-2025-2', '待审批', '2026-03-06 18:08:02');
+INSERT INTO `student_course` VALUES (37, 15, 5, 12, '2024-2025-2', '已通过', '2026-03-06 18:05:40');
+INSERT INTO `student_course` VALUES (38, 16, 5, 12, '2024-2025-2', '已通过', '2026-03-06 18:08:02');
 INSERT INTO `student_course` VALUES (39, 16, 3, 3, '2024-2025-1', '待审批', '2026-03-06 18:09:29');
 INSERT INTO `student_course` VALUES (40, 4, 9, 11, '2025-2026-1', '已通过', '2026-03-06 22:32:05');
-INSERT INTO `student_course` VALUES (41, 13, 9, 11, '2025-2026-1', '已通过', '2026-03-07 10:14:46');
-INSERT INTO `student_course` VALUES (42, 16, 9, 11, '2025-2026-1', '已拒绝', '2026-03-07 10:16:31');
+INSERT INTO `student_course` VALUES (45, 5, 9, 11, '2025-2026-1', '已通过', '2026-03-07 11:36:35');
+INSERT INTO `student_course` VALUES (46, 16, 9, 11, '2025-2026-1', '已通过', '2026-03-07 11:37:01');
+INSERT INTO `student_course` VALUES (47, 17, 5, 12, '2024-2025-2', '已通过', '2026-03-07 12:15:53');
 
 -- ----------------------------
 -- Table structure for teacher
@@ -361,7 +365,7 @@ CREATE TABLE `teacher`  (
   UNIQUE INDEX `uk_teacher_no`(`teacher_no`) USING BTREE,
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_teacher_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '教师信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '教师信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of teacher
@@ -379,6 +383,7 @@ INSERT INTO `teacher` VALUES (10, 'T20240202', 'F', '副教授', 25, '2024-02-05
 INSERT INTO `teacher` VALUES (11, 'T20250901', 'F', '教授', 26, '2025-09-01 09:11:00', '2026-03-06 11:32:18');
 INSERT INTO `teacher` VALUES (12, 'T20260101', 'M', '讲师', 27, '2026-01-15 11:22:06', '2026-03-06 11:22:43');
 INSERT INTO `teacher` VALUES (13, 'TEST001', 'M', '讲师', 28, '2026-03-06 18:00:32', '2026-03-06 18:00:32');
+INSERT INTO `teacher` VALUES (14, 'TEST005', 'M', '教授', 33, '2026-03-07 12:17:09', '2026-03-07 12:17:09');
 
 -- ----------------------------
 -- Table structure for teacher_course
@@ -409,7 +414,7 @@ INSERT INTO `teacher_course` VALUES (6, 6, 6, '2024-2025-1', '2024-06-15 09:25:0
 INSERT INTO `teacher_course` VALUES (7, 7, 7, '2024-2025-1', '2024-06-15 09:30:00');
 INSERT INTO `teacher_course` VALUES (8, 8, 8, '2024-2025-1', '2024-06-15 09:35:00');
 INSERT INTO `teacher_course` VALUES (9, 9, 1, '2024-2025-1', '2024-06-15 09:40:00');
-INSERT INTO `teacher_course` VALUES (10, 10, 2, '2024-2025-1', '2024-06-15 09:45:00');
+INSERT INTO `teacher_course` VALUES (10, 10, 10, '2024-2025-1', '2024-06-15 09:45:00');
 INSERT INTO `teacher_course` VALUES (11, 12, 5, '2024-2025-2', '2025-03-15 09:00:00');
 INSERT INTO `teacher_course` VALUES (12, 11, 9, '2025-2026-1', '2025-09-15 11:29:31');
 
@@ -432,7 +437,7 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_username`(`username`) USING BTREE,
   UNIQUE INDEX `uk_email`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
@@ -467,5 +472,7 @@ INSERT INTO `user` VALUES (27, 'liangliwei', '$2a$10$V12zSoYVZ3UBzFkkErUJLuUY3IW
 INSERT INTO `user` VALUES (28, 'test', '$2a$10$xVlaJGQIHhHKs.UNaxQHRu2ManpZsiEvbTxaTkf36Ke4Jy6ord4F2', 'test@school.edu.cn', '13710101010', 'TEACHER', '测试教师用户', NULL, 1, '2026-03-06 18:00:32', '2026-03-06 18:05:15');
 INSERT INTO `user` VALUES (29, 'ceshi', '$2a$10$LDt4u0Woof4EOp.IklrjweikoqYQvs30jzR7LQIchx4.Sjon0g03q', 'ceshi@school.edu.cn', '13701010101', 'STUDENT', '测试学生用户', NULL, 1, '2026-03-06 18:04:37', '2026-03-06 18:05:18');
 INSERT INTO `user` VALUES (30, 'ceshi1', '$2a$10$FRA9qX62dG/mZu3.rCxcz.Hisr.L/v/Lt6PPWoh8BIO4hfC6PEaLi', 'ceshi1@school.edu.cn', '13701010101', 'STUDENT', '测试学生用户1', NULL, 1, '2026-03-06 18:07:47', '2026-03-06 18:07:47');
+INSERT INTO `user` VALUES (32, 'ceshi2', '$2a$10$/cvVNDll84PzdjSSuV9Alu/jnOdr4HXEVJrZF3sXpoIqwPww6DaZS', 'T@s.school.edu.cn', '13710100000', 'STUDENT', 'T', NULL, 1, '2026-03-07 12:15:28', '2026-03-07 12:15:28');
+INSERT INTO `user` VALUES (33, 'ceshi3', '$2a$10$JSpxsEDHIsAFuQJwPIsMHO72OwRQiD.u6/NTdWEMyeQAlVu9wm2mG', 'TE@t.school.edu.cn', '13710100001', 'TEACHER', 'TE', NULL, 1, '2026-03-07 12:17:09', '2026-03-07 12:17:09');
 
 SET FOREIGN_KEY_CHECKS = 1;

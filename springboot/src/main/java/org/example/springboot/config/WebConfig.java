@@ -22,9 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
     private static final String[] PUBLIC_PATHS = {
         "/api/user/login",      // 登录接口
         "/api/user/forget",     // 忘记密码接口
-            "/api/user/add",
+            "/api/user/register",
             "/api/class/all",
-        "/api/user/add",        // 用户注册接口
+        "/api/user/register",        // 用户注册接口
         "/api/user/{id}",       // 用户信息查询接口
         "/api/email/**",        // 邮件相关接口
         "/api/img/**",          // 图片资源接口（带前缀）

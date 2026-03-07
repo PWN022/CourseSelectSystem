@@ -45,7 +45,6 @@ import Auth from './Auth.vue'
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
-const formRef = ref(null)
 const loading = ref(false)
 
 const loginForm = reactive({
@@ -97,7 +96,6 @@ onMounted(() => {
 })
 
 const handleSubmit = (form) => {
-  formRef.value = form.value
   loginFormRef.value = form.value
   handleLogin()
 }
