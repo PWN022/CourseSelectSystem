@@ -7,11 +7,6 @@
     <list default="true" id="cbe07639-f900-4001-8b13-22ff5ddd1ef7" name="更改" comment="">
       <change afterPath="$PROJECT_DIR$/vue3/src/assets/bg-1920.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/controller/AttendanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/controller/AttendanceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/controller/StudentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/AttendanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/AttendanceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/ScoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/ScoreService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/springboot/src/main/java/org/example/springboot/service/StudentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/babel.config.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vue3/jsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue3/jsconfig.json" afterDir="false" />
@@ -128,6 +123,7 @@
       <workItem from="1772885843914" duration="628000" />
       <workItem from="1772942612555" duration="86000" />
       <workItem from="1772947796919" duration="6149000" />
+      <workItem from="1772967892566" duration="684000" />
     </task>
     <servers />
   </component>
