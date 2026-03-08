@@ -133,14 +133,17 @@ public class ScoreService {
         if (teacher == null) {
             throw new ServiceException("教师不存在");
         }
-        
-        // 检查学生是否选修了该课程
+
+        // 检查学生是否选修了该课程，并且必须是选了当前录分老师的课！
         LambdaQueryWrapper<StudentCourse> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StudentCourse::getStudentId, score.getStudentId())
-                   .eq(StudentCourse::getCourseId, score.getCourseId())
-                   .eq(StudentCourse::getSemester, score.getSemester());
+                .eq(StudentCourse::getCourseId, score.getCourseId())
+                .eq(StudentCourse::getSemester, score.getSemester())
+                // 新增这一行：严格校验对应老师
+                .eq(StudentCourse::getTeacherId, score.getTeacherId());
+
         if (studentCourseMapper.selectCount(queryWrapper) == 0) {
-            throw new ServiceException("该学生未选修此课程");
+            throw new ServiceException("该学生未选修此课程或并非您名下的学生");
         }
         
         // 检查是否已存在成绩记录
@@ -170,6 +173,12 @@ public class ScoreService {
         Score existingScore = scoreMapper.selectById(score.getId());
         if (existingScore == null) {
             throw new ServiceException("成绩记录不存在");
+        }
+
+        // 严防越权修改。确保只有原录入教师（或管理员）才能修改该成绩
+        // 假设这里能通过某种方式拿到当前登录用户的teacherId，或者在Controller层将要更新的Score对象的teacherId强行设为当前登录教师的ID
+        if (score.getTeacherId() != null && !existingScore.getTeacherId().equals(score.getTeacherId())) {
+            throw new ServiceException("无权修改其他教师录入的成绩");
         }
         
         // 设置等级

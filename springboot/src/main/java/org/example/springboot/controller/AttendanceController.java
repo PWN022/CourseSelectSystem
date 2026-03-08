@@ -1,12 +1,17 @@
 package org.example.springboot.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.example.springboot.common.Result;
 import org.example.springboot.entity.Attendance;
+import org.example.springboot.entity.Teacher;
+import org.example.springboot.entity.User;
+import org.example.springboot.mapper.TeacherMapper;
 import org.example.springboot.service.AttendanceService;
+import org.example.springboot.util.JwtTokenUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +26,27 @@ import java.util.Map;
 public class AttendanceController {
     @Resource
     private AttendanceService attendanceService;
+
+    @Resource
+    private TeacherMapper teacherMapper;// 新增:用于查询教师ID
+
+    /**
+     * 新增私有方法：获取当前登录的教师ID
+     */
+    private Long getCurrentTeacherId() {
+        User currentUser = JwtTokenUtils.getCurrentUser();
+        // 如果当前是教师登录，去 teacher 表查出对应的 teacher_id
+        if (currentUser != null && "TEACHER".equals(currentUser.getRoleCode())) {
+            LambdaQueryWrapper<Teacher> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(Teacher::getUserId, currentUser.getId());
+            Teacher teacher = teacherMapper.selectOne(queryWrapper);
+            if (teacher != null) {
+                return teacher.getId();
+            }
+        }
+        // 如果是管理员(ADMIN)或者未查询到，返回 null。Service 层遇到 null 会跳过越权校验
+        return null;
+    }
 
     @Operation(summary = "分页查询考勤记录")
     @GetMapping("/page")
@@ -55,7 +81,10 @@ public class AttendanceController {
     @Operation(summary = "添加考勤记录")
     @PostMapping
     public Result<?> addAttendance(@RequestBody Attendance attendance) {
-        attendanceService.addAttendance(attendance);
+        // 1. 动态获取当前登录的 teacherId
+        Long currentTeacherId = getCurrentTeacherId();
+        // 2. 传入第二个实参
+        attendanceService.addAttendance(attendance, currentTeacherId);
         return Result.success();
     }
 

@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 07/03/2026 16:49:31
+ Date: 08/03/2026 18:57:20
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,7 @@ CREATE TABLE `attendance`  (
   INDEX `idx_course_id`(`course_id`) USING BTREE,
   CONSTRAINT `fk_attendance_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_attendance_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 84 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '考勤信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 85 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '考勤信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of attendance
@@ -82,9 +82,6 @@ INSERT INTO `attendance` VALUES (40, 6, 7, '2024-10-16', '缺席', '旷课', '20
 INSERT INTO `attendance` VALUES (41, 7, 2, '2024-09-16', '出席', NULL, '2024-09-16 10:00:00');
 INSERT INTO `attendance` VALUES (42, 7, 2, '2024-09-23', '出席', NULL, '2024-09-23 10:00:00');
 INSERT INTO `attendance` VALUES (43, 7, 2, '2024-10-14', '缺席', '无故缺席', '2024-10-14 10:10:00');
-INSERT INTO `attendance` VALUES (44, 7, 6, '2024-09-17', '出席', NULL, '2024-09-17 14:00:00');
-INSERT INTO `attendance` VALUES (45, 7, 6, '2024-09-24', '请假', '事假', '2024-09-24 13:55:00');
-INSERT INTO `attendance` VALUES (46, 7, 6, '2024-10-15', '出席', NULL, '2024-10-15 14:00:00');
 INSERT INTO `attendance` VALUES (47, 8, 1, '2024-09-15', '出席', NULL, '2024-09-15 08:30:00');
 INSERT INTO `attendance` VALUES (48, 8, 1, '2024-09-22', '出席', NULL, '2024-09-22 08:30:00');
 INSERT INTO `attendance` VALUES (49, 8, 1, '2024-09-29', '出席', NULL, '2024-09-29 08:30:00');
@@ -121,7 +118,7 @@ INSERT INTO `attendance` VALUES (79, 13, 8, '2024-10-17', '出席', NULL, '2024-
 INSERT INTO `attendance` VALUES (80, 14, 4, '2024-09-18', '出席', NULL, '2024-09-18 13:30:00');
 INSERT INTO `attendance` VALUES (81, 14, 4, '2024-09-25', '出席', NULL, '2024-09-25 13:30:00');
 INSERT INTO `attendance` VALUES (82, 14, 4, '2024-10-16', '请假', '事假', '2024-10-16 13:25:00');
-INSERT INTO `attendance` VALUES (83, 14, 5, '2025-03-18', '出席', '', '2026-03-07 16:06:25');
+INSERT INTO `attendance` VALUES (83, 14, 5, '2025-03-18', '出席', NULL, '2026-03-07 16:06:25');
 
 -- ----------------------------
 -- Table structure for class
@@ -204,10 +201,10 @@ CREATE TABLE `score`  (
   INDEX `idx_course_id`(`course_id`) USING BTREE,
   INDEX `idx_teacher_id`(`teacher_id`) USING BTREE,
   CONSTRAINT `fk_score_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_score_select` FOREIGN KEY (`student_id`, `course_id`, `semester`) REFERENCES `student_course` (`student_id`, `course_id`, `semester`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_score_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_score_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_score_select` FOREIGN KEY (`student_id`, `course_id`, `semester`) REFERENCES `student_course` (`student_id`, `course_id`, `semester`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '成绩信息表' ROW_FORMAT = DYNAMIC;
+  CONSTRAINT `fk_score_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '成绩信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of score
@@ -215,7 +212,6 @@ CREATE TABLE `score`  (
 INSERT INTO `score` VALUES (1, 1, 1, 1, '2024-2025-1', 88.50, 'B', '良好', '2025-01-15 10:00:00', '2026-03-04 18:20:18');
 INSERT INTO `score` VALUES (2, 1, 2, 2, '2024-2025-1', 92.00, 'A', '优秀', '2025-01-15 10:01:00', '2025-01-15 10:01:00');
 INSERT INTO `score` VALUES (3, 1, 5, 5, '2024-2025-1', 85.00, 'B', '良好', '2025-01-15 10:02:00', '2025-01-15 10:02:00');
-INSERT INTO `score` VALUES (4, 1, 7, 7, '2024-2025-1', 78.50, 'C', '中等', '2025-01-15 10:03:00', '2025-01-15 10:03:00');
 INSERT INTO `score` VALUES (5, 2, 1, 1, '2024-2025-1', 91.00, 'A', '优秀', '2025-01-15 10:10:00', '2025-01-15 10:10:00');
 INSERT INTO `score` VALUES (6, 2, 6, 6, '2024-2025-1', 84.00, 'B', '良好', '2025-01-15 10:11:00', '2025-01-15 10:11:00');
 INSERT INTO `score` VALUES (7, 3, 2, 2, '2024-2025-1', 76.00, 'C', '中等', '2025-01-15 10:20:00', '2025-01-15 10:20:00');
@@ -226,7 +222,6 @@ INSERT INTO `score` VALUES (11, 6, 1, 1, '2024-2025-1', 86.00, 'B', '良好', '2
 INSERT INTO `score` VALUES (12, 6, 5, 5, '2024-2025-1', 79.00, 'C', '中等', '2025-01-15 10:41:00', '2025-01-15 10:41:00');
 INSERT INTO `score` VALUES (13, 6, 7, 7, '2024-2025-1', 88.00, 'B', '良好', '2025-01-15 10:42:00', '2025-01-15 10:42:00');
 INSERT INTO `score` VALUES (14, 7, 2, 2, '2024-2025-1', 72.00, 'C', '中等', '2025-01-15 10:50:00', '2025-01-15 10:50:00');
-INSERT INTO `score` VALUES (15, 7, 6, 6, '2024-2025-1', 65.00, 'D', '及格', '2025-01-15 10:51:00', '2025-01-15 10:51:00');
 INSERT INTO `score` VALUES (16, 8, 1, 1, '2024-2025-1', 94.00, 'A', '优秀', '2025-01-15 11:00:00', '2025-01-15 11:00:00');
 INSERT INTO `score` VALUES (17, 8, 3, 3, '2024-2025-1', 89.00, 'B', '良好', '2025-01-15 11:01:00', '2025-01-15 11:01:00');
 INSERT INTO `score` VALUES (18, 8, 4, 4, '2024-2025-1', 91.50, 'A', '优秀', '2025-01-15 11:02:00', '2025-01-15 11:02:00');
@@ -280,9 +275,6 @@ INSERT INTO `student` VALUES (11, 'S20240911', 'M', '2002-09-14', '1101142002091
 INSERT INTO `student` VALUES (12, 'S20240912', 'F', '2004-06-27', '110115200406270120', '北京市大兴区兴丰街道', 2, 21, '2024-08-25 14:15:00', '2024-10-12 09:30:00');
 INSERT INTO `student` VALUES (13, 'S20240913', 'M', '2003-10-08', '110116200310080131', '北京市怀柔区龙山街道', 3, 22, '2024-08-26 09:50:00', '2024-08-26 09:50:00');
 INSERT INTO `student` VALUES (14, 'S20240914', 'F', '2005-07-22', '110117200507220142', '北京市平谷区滨河街道', 4, 23, '2024-08-26 13:40:00', '2024-09-30 16:20:00');
-INSERT INTO `student` VALUES (15, 'TEST002', 'M', '2001-12-31', '110101200201010015', '北京市东城区安定门街道', 7, 29, '2026-03-06 18:04:37', '2026-03-06 18:51:23');
-INSERT INTO `student` VALUES (16, 'TEST003', 'F', '2003-02-28', '110102200303010028', '北京市西城区西长安街街道', 7, 30, '2026-03-06 18:07:47', '2026-03-06 18:51:26');
-INSERT INTO `student` VALUES (17, 'TEST004', 'M', '2005-07-22', '110117200507230142', '北京市平谷区滨河街道', 7, 32, '2026-03-07 12:15:28', '2026-03-07 12:15:28');
 
 -- ----------------------------
 -- Table structure for student_course
@@ -311,7 +303,6 @@ CREATE TABLE `student_course`  (
 INSERT INTO `student_course` VALUES (1, 1, 1, 1, '2024-2025-1', '已通过', '2024-08-25 09:00:00');
 INSERT INTO `student_course` VALUES (2, 1, 2, 2, '2024-2025-1', '已通过', '2024-08-25 09:01:00');
 INSERT INTO `student_course` VALUES (3, 1, 5, 5, '2024-2025-1', '已通过', '2024-08-25 09:02:00');
-INSERT INTO `student_course` VALUES (4, 1, 7, 7, '2024-2025-1', '待审批', '2024-08-25 09:03:00');
 INSERT INTO `student_course` VALUES (5, 2, 1, 1, '2024-2025-1', '已通过', '2024-08-25 09:10:00');
 INSERT INTO `student_course` VALUES (6, 2, 6, 6, '2024-2025-1', '已通过', '2024-08-25 09:11:00');
 INSERT INTO `student_course` VALUES (7, 3, 2, 2, '2024-2025-1', '已通过', '2024-08-25 09:20:00');
@@ -322,7 +313,6 @@ INSERT INTO `student_course` VALUES (11, 6, 1, 1, '2024-2025-1', '已通过', '2
 INSERT INTO `student_course` VALUES (12, 6, 5, 5, '2024-2025-1', '已通过', '2024-08-26 10:11:00');
 INSERT INTO `student_course` VALUES (13, 6, 7, 7, '2024-2025-1', '已通过', '2024-08-26 10:12:00');
 INSERT INTO `student_course` VALUES (14, 7, 2, 2, '2024-2025-1', '已通过', '2024-08-26 10:20:00');
-INSERT INTO `student_course` VALUES (15, 7, 6, 6, '2024-2025-1', '待审批', '2024-08-26 10:21:00');
 INSERT INTO `student_course` VALUES (16, 8, 1, 1, '2024-2025-1', '已通过', '2024-08-27 09:00:00');
 INSERT INTO `student_course` VALUES (17, 8, 3, 3, '2024-2025-1', '已通过', '2024-08-27 09:01:00');
 INSERT INTO `student_course` VALUES (18, 8, 4, 4, '2024-2025-1', '已通过', '2024-08-27 09:02:00');
@@ -330,24 +320,15 @@ INSERT INTO `student_course` VALUES (19, 8, 8, 8, '2024-2025-1', '已通过', '2
 INSERT INTO `student_course` VALUES (20, 9, 5, 5, '2024-2025-1', '已通过', '2024-08-27 09:10:00');
 INSERT INTO `student_course` VALUES (21, 10, 2, 2, '2024-2025-1', '已通过', '2024-08-27 09:20:00');
 INSERT INTO `student_course` VALUES (22, 10, 4, 4, '2024-2025-1', '已通过', '2024-08-27 09:21:00');
-INSERT INTO `student_course` VALUES (23, 10, 6, 6, '2024-2025-1', '已拒绝', '2024-08-27 09:22:00');
 INSERT INTO `student_course` VALUES (24, 12, 3, 3, '2024-2025-1', '已通过', '2024-08-27 14:00:00');
-INSERT INTO `student_course` VALUES (25, 12, 7, 7, '2024-2025-1', '待审批', '2024-08-27 14:01:00');
 INSERT INTO `student_course` VALUES (26, 13, 1, 1, '2024-2025-1', '已通过', '2024-08-28 10:00:00');
 INSERT INTO `student_course` VALUES (27, 13, 5, 5, '2024-2025-1', '已通过', '2024-08-28 10:01:00');
 INSERT INTO `student_course` VALUES (28, 13, 8, 8, '2024-2025-1', '已通过', '2024-08-28 10:02:00');
 INSERT INTO `student_course` VALUES (29, 14, 4, 4, '2024-2025-1', '已通过', '2024-08-28 10:10:00');
-INSERT INTO `student_course` VALUES (30, 14, 6, 6, '2024-2025-1', '待审批', '2024-08-28 10:11:00');
 INSERT INTO `student_course` VALUES (34, 14, 5, 12, '2024-2025-2', '已通过', '2026-03-06 11:57:26');
 INSERT INTO `student_course` VALUES (35, 1, 9, 11, '2025-2026-1', '已通过', '2026-03-06 17:58:21');
-INSERT INTO `student_course` VALUES (36, 15, 9, 11, '2025-2026-1', '已通过', '2026-03-06 18:05:39');
-INSERT INTO `student_course` VALUES (37, 15, 5, 12, '2024-2025-2', '已通过', '2026-03-06 18:05:40');
-INSERT INTO `student_course` VALUES (38, 16, 5, 12, '2024-2025-2', '已通过', '2026-03-06 18:08:02');
-INSERT INTO `student_course` VALUES (39, 16, 3, 3, '2024-2025-1', '待审批', '2026-03-06 18:09:29');
 INSERT INTO `student_course` VALUES (40, 4, 9, 11, '2025-2026-1', '已通过', '2026-03-06 22:32:05');
 INSERT INTO `student_course` VALUES (45, 5, 9, 11, '2025-2026-1', '已通过', '2026-03-07 11:36:35');
-INSERT INTO `student_course` VALUES (46, 16, 9, 11, '2025-2026-1', '已通过', '2026-03-07 11:37:01');
-INSERT INTO `student_course` VALUES (47, 17, 5, 12, '2024-2025-2', '已通过', '2026-03-07 12:15:53');
 
 -- ----------------------------
 -- Table structure for teacher
@@ -382,8 +363,6 @@ INSERT INTO `teacher` VALUES (9, 'T20240108', 'M', '讲师', 24, '2024-01-20 09:
 INSERT INTO `teacher` VALUES (10, 'T20240202', 'F', '副教授', 25, '2024-02-05 14:15:00', '2026-03-06 11:21:54');
 INSERT INTO `teacher` VALUES (11, 'T20250901', 'F', '教授', 26, '2025-09-01 09:11:00', '2026-03-06 11:32:18');
 INSERT INTO `teacher` VALUES (12, 'T20260101', 'M', '讲师', 27, '2026-01-15 11:22:06', '2026-03-06 11:22:43');
-INSERT INTO `teacher` VALUES (13, 'TEST001', 'M', '讲师', 28, '2026-03-06 18:00:32', '2026-03-06 18:00:32');
-INSERT INTO `teacher` VALUES (14, 'TEST005', 'M', '教授', 33, '2026-03-07 12:17:09', '2026-03-07 12:17:09');
 
 -- ----------------------------
 -- Table structure for teacher_course
@@ -472,7 +451,7 @@ INSERT INTO `user` VALUES (27, 'liangliwei', '$2a$10$V12zSoYVZ3UBzFkkErUJLuUY3IW
 INSERT INTO `user` VALUES (28, 'test', '$2a$10$xVlaJGQIHhHKs.UNaxQHRu2ManpZsiEvbTxaTkf36Ke4Jy6ord4F2', 'test@school.edu.cn', '13710101010', 'TEACHER', '测试教师用户', NULL, 1, '2026-03-06 18:00:32', '2026-03-06 18:05:15');
 INSERT INTO `user` VALUES (29, 'ceshi', '$2a$10$LDt4u0Woof4EOp.IklrjweikoqYQvs30jzR7LQIchx4.Sjon0g03q', 'ceshi@school.edu.cn', '13701010101', 'STUDENT', '测试学生用户', NULL, 1, '2026-03-06 18:04:37', '2026-03-06 18:05:18');
 INSERT INTO `user` VALUES (30, 'ceshi1', '$2a$10$FRA9qX62dG/mZu3.rCxcz.Hisr.L/v/Lt6PPWoh8BIO4hfC6PEaLi', 'ceshi1@school.edu.cn', '13701010101', 'STUDENT', '测试学生用户1', NULL, 1, '2026-03-06 18:07:47', '2026-03-06 18:07:47');
-INSERT INTO `user` VALUES (32, 'ceshi2', '$2a$10$/cvVNDll84PzdjSSuV9Alu/jnOdr4HXEVJrZF3sXpoIqwPww6DaZS', 'T@s.school.edu.cn', '13710100000', 'STUDENT', 'T', NULL, 1, '2026-03-07 12:15:28', '2026-03-07 12:15:28');
+INSERT INTO `user` VALUES (32, 'ceshi2', '$2a$10$/cvVNDll84PzdjSSuV9Alu/jnOdr4HXEVJrZF3sXpoIqwPww6DaZS', 'T@s.school.edu.cn', '13710100000', 'STUDENT', 'T', NULL, 0, '2026-03-07 12:15:28', '2026-03-08 14:18:18');
 INSERT INTO `user` VALUES (33, 'ceshi3', '$2a$10$JSpxsEDHIsAFuQJwPIsMHO72OwRQiD.u6/NTdWEMyeQAlVu9wm2mG', 'TE@t.school.edu.cn', '13710100001', 'TEACHER', 'TE', NULL, 1, '2026-03-07 12:17:09', '2026-03-07 12:17:09');
 
 SET FOREIGN_KEY_CHECKS = 1;

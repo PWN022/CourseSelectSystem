@@ -48,39 +48,33 @@ public class AttendanceService {
     private StudentCourseMapper studentCourseMapper;
 
     /**
-     * 核心权限拦截器：确保老师只能看 【自己教的某门课】 下的 【选了这门课的学生】
+     * 核心权限拦截器：确保老师只能看 【自己教的某门课】 下的 【选了这门课且绑定自己为老师的学生】
      */
     private void applyTeacherFilter(LambdaQueryWrapper<Attendance> wrapper, String teacherId) {
         if (StringUtils.isNotBlank(teacherId) && !"undefined".equals(teacherId)) {
             try {
                 Long tid = Long.valueOf(teacherId);
-                // 查询该老师所有的排课及对应学生
+                // 查出该老师名下所有的选课记录 (包含 courseId 和 studentId)
                 List<StudentCourse> scList = studentCourseMapper.selectList(
-                        new LambdaQueryWrapper<StudentCourse>().eq(StudentCourse::getTeacherId, tid)
+                        new LambdaQueryWrapper<StudentCourse>()
+                                .eq(StudentCourse::getTeacherId, tid)
+                                .eq(StudentCourse::getStatus, "已通过") // 只看已通过的
                 );
 
                 if (scList.isEmpty()) {
-                    wrapper.eq(Attendance::getId, -1L); // 没有学生，直接阻断查询
+                    wrapper.eq(Attendance::getId, -1L); // 该老师名下没学生，直接阻断
                     return;
                 }
 
-                // 按课程分组，将选该课的学生ID集合起来
-                Map<Long, List<Long>> courseToStudents = scList.stream().collect(
-                        Collectors.groupingBy(StudentCourse::getCourseId,
-                                Collectors.mapping(StudentCourse::getStudentId, Collectors.toList()))
-                );
-
-                // 动态拼接 SQL 条件，例如：(课程=数学 AND 学生 IN (小明, 小红)) OR (课程=英语 AND 学生 IN (小刚))
+                // 将老师名下的记录转换为特定的组合查询条件
                 wrapper.and(w -> {
-                    for (Map.Entry<Long, List<Long>> entry : courseToStudents.entrySet()) {
-                        if (!entry.getValue().isEmpty()) {
-                            w.or(orW -> orW.eq(Attendance::getCourseId, entry.getKey())
-                                    .in(Attendance::getStudentId, entry.getValue()));
-                        }
+                    for (StudentCourse sc : scList) {
+                        w.or(orW -> orW.eq(Attendance::getCourseId, sc.getCourseId())
+                                .eq(Attendance::getStudentId, sc.getStudentId()));
                     }
                 });
             } catch (Exception e) {
-                wrapper.eq(Attendance::getId, -1L); // 发生异常时阻断查询，防止数据泄露
+                wrapper.eq(Attendance::getId, -1L); // 发生异常时阻断查询
             }
         }
     }
@@ -124,12 +118,24 @@ public class AttendanceService {
     }
 
     @Transactional
-    public void addAttendance(Attendance attendance) {
+    public void addAttendance(Attendance attendance,Long currentTeacherId) {
         Student student = studentMapper.selectById(attendance.getStudentId());
         if (student == null) throw new ServiceException("学生不存在");
 
         Course course = courseMapper.selectById(attendance.getCourseId());
         if (course == null) throw new ServiceException("课程不存在");
+
+        // 越权校验
+        if (currentTeacherId != null) {
+            LambdaQueryWrapper<StudentCourse> scWrapper = new LambdaQueryWrapper<>();
+            scWrapper.eq(StudentCourse::getStudentId, attendance.getStudentId())
+                    .eq(StudentCourse::getCourseId, attendance.getCourseId())
+                    .eq(StudentCourse::getTeacherId, currentTeacherId)
+                    .eq(StudentCourse::getStatus, "已通过");
+            if (studentCourseMapper.selectCount(scWrapper) == 0) {
+                throw new ServiceException("该学生并非您这门课名下的学生，无法添加考勤");
+            }
+        }
 
         LambdaQueryWrapper<Attendance> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Attendance::getStudentId, attendance.getStudentId())
