@@ -46,69 +46,108 @@ public class StudentService {
      */
     public Page<Student> getStudentsByPage(String studentNo, String name, Long classId, String headerTeacherId, Integer currentPage, Integer size) {
         Page<Student> page = new Page<>(currentPage, size);
+        LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
 
-        try {
-            return studentMapper.selectStudentPage(page, studentNo, name, classId);
-        } catch (Exception e) {
-            LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
-
-            if (StringUtils.isNotBlank(studentNo)) {
-                queryWrapper.like(Student::getStudentNo, studentNo);
-            }
-            if (StringUtils.isNotBlank(name)) {
-                List<Long> ids = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getName, name)).stream().map(User::getId).toList();
-                if(ids.isEmpty()){
-                    return page;
-                }else{
-                    queryWrapper.in(Student::getUserId, ids);
-                }
-            }
-            if (classId != null) {
-                queryWrapper.eq(Student::getClassId, classId);
-            }
-
-            if(StringUtils.isNotBlank(headerTeacherId)){
-                try {
-                    Long teacherId = Long.valueOf(headerTeacherId);
-                    Set<Long> studentIds = new HashSet<>();
-
-                    // 查询该教师担任班主任的班级学生
-                    List<Long> clazzIds = classMapper.selectList(
-                            new LambdaQueryWrapper<Class>().eq(Class::getHeadTeacherId, teacherId)
-                    ).stream().map(Class::getId).toList();
-
-                    if(!clazzIds.isEmpty()){
-                        List<Student> studentsFromClass = studentMapper.selectList(
-                                new LambdaQueryWrapper<Student>().in(Student::getClassId, clazzIds)
-                        );
-                        studentIds.addAll(studentsFromClass.stream().map(Student::getId).toList());
-                    }
-
-                    // 查询选修了“该教师”课程且状态为“已通过”的学生
-                    List<Long> courseStudentIds = studentCourseMapper.selectList(
-                            new LambdaQueryWrapper<StudentCourse>()
-                                    .eq(StudentCourse::getTeacherId, teacherId)
-                                    .eq(StudentCourse::getStatus, "已通过")
-                    ).stream().map(StudentCourse::getStudentId).toList();
-
-                    if (!courseStudentIds.isEmpty()) {
-                        studentIds.addAll(courseStudentIds);
-                    }
-
-                    if (!studentIds.isEmpty()) {
-                        queryWrapper.in(Student::getId, studentIds);
-                    } else {
-                        return page;
-                    }
-                } catch (NumberFormatException exception) {
-                    return page;
-                }
-            }
-
-            Page<Student> resultPage = studentMapper.selectPage(page, queryWrapper);
-            resultPage.getRecords().forEach(this::fillInfo);
-            return resultPage;
+        if (StringUtils.isNotBlank(studentNo)) {
+            queryWrapper.like(Student::getStudentNo, studentNo);
         }
+        if (StringUtils.isNotBlank(name)) {
+            List<Long> ids = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getName, name)).stream().map(User::getId).toList();
+            if(ids.isEmpty()){
+                return page;
+            }else{
+                queryWrapper.in(Student::getUserId, ids);
+            }
+        }
+        if (classId != null) {
+            queryWrapper.eq(Student::getClassId, classId);
+        }
+
+        // ============ 【分类打标签逻辑】 ============
+        Set<Long> allStudentIds = new HashSet<>();
+        Set<Long> headStudentIds = new HashSet<>(); // 记录班学生ID
+        Set<Long> courseStudentIds = new HashSet<>(); // 记录选课学生ID
+
+        if(StringUtils.isNotBlank(headerTeacherId)){
+            try {
+                Long teacherId = Long.valueOf(headerTeacherId);
+
+                // 身份1：班主任
+                List<Long> clazzIds = classMapper.selectList(
+                        new LambdaQueryWrapper<Class>().eq(Class::getHeadTeacherId, teacherId)
+                ).stream().map(Class::getId).toList();
+
+                if(!clazzIds.isEmpty()){
+                    List<Student> studentsFromClass = studentMapper.selectList(
+                            new LambdaQueryWrapper<Student>().in(Student::getClassId, clazzIds)
+                    );
+                    List<Long> ids = studentsFromClass.stream().map(Student::getId).toList();
+                    headStudentIds.addAll(ids);
+                    allStudentIds.addAll(ids);
+                }
+
+                // 身份2：任课教师
+                List<Long> cSIds = studentCourseMapper.selectList(
+                        new LambdaQueryWrapper<StudentCourse>()
+                                .eq(StudentCourse::getTeacherId, teacherId)
+                                .eq(StudentCourse::getStatus, "已通过")
+                ).stream().map(StudentCourse::getStudentId).toList();
+
+                if (!cSIds.isEmpty()) {
+                    courseStudentIds.addAll(cSIds);
+                    allStudentIds.addAll(cSIds);
+                }
+
+                if (!allStudentIds.isEmpty()) {
+                    queryWrapper.in(Student::getId, allStudentIds);
+                } else {
+                    return page;
+                }
+            } catch (NumberFormatException exception) {
+                return page;
+            }
+        }
+
+        Page<Student> resultPage = studentMapper.selectPage(page, queryWrapper);
+        resultPage.getRecords().forEach(this::fillInfo);
+
+        List<java.util.Map<String, Object>> mapList = new java.util.ArrayList<>();
+        for (Student student : resultPage.getRecords()) {
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("id", student.getId());
+            map.put("studentNo", student.getStudentNo());
+            map.put("name", student.getName());
+            map.put("gender", student.getGender());
+            map.put("phone", student.getPhone());
+            map.put("email", student.getEmail());
+            map.put("address", student.getAddress());
+            map.put("className", student.getClassName());
+            map.put("createTime", student.getCreateTime());
+
+            // ======== 【核心：给学生发“身份证”】 ========
+            if (StringUtils.isNotBlank(headerTeacherId)) {
+                boolean isHead = headStudentIds.contains(student.getId());
+                boolean isCourse = courseStudentIds.contains(student.getId());
+
+                if (isHead && isCourse) {
+                    map.put("studentType", "本班且选课");
+                } else if (isHead) {
+                    map.put("studentType", "本班学生");
+                } else if (isCourse) {
+                    map.put("studentType", "授课学生");
+                }
+            } else {
+                map.put("studentType", "全校学生"); // 管理员看到的是这个
+            }
+            // ==========================================
+
+            mapList.add(map);
+        }
+
+        Page mapPage = new Page<>(currentPage, size, resultPage.getTotal());
+        mapPage.setRecords(mapList);
+
+        return mapPage;
     }
 
     /**

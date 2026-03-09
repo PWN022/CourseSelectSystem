@@ -6,7 +6,7 @@
           <el-input v-model="searchForm.courseName" placeholder="请输入课程名称" clearable></el-input>
         </el-form-item>
         <el-form-item label="学期">
-          <el-input v-model="searchForm.semester" placeholder="格式如：2023-2024-1" clearable></el-input>
+          <el-input v-model="searchForm.semester" placeholder="格式如：2024-2025-1" clearable></el-input>
         </el-form-item>
         <el-form-item label="课程类型">
           <el-select v-model="searchForm.courseType" placeholder="请选择课程类型" clearable>

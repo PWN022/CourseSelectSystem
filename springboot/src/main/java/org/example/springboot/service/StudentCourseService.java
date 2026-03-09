@@ -242,23 +242,21 @@ public class StudentCourseService  {
             throw new ServiceException("该学生在该学期已选择此课程");
         }
 
-        // ================== 【修改单科申请容量校验】 ==================
+        // 防超卖校验加上 teacherId
         Course course = courseMapper.selectById(studentCourse.getCourseId());
         if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
             LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
             countWrapper.eq(StudentCourse::getCourseId, studentCourse.getCourseId())
-                    // 修复：将容量精确到具体的授课教师
-                    .eq(StudentCourse::getTeacherId, studentCourse.getTeacherId())
+                    .eq(StudentCourse::getTeacherId, studentCourse.getTeacherId()) // ★ 精确校验该教师名额
                     .eq(StudentCourse::getSemester, studentCourse.getSemester())
                     // 锁定占用名额的状态
                     .in(StudentCourse::getStatus, "已通过", "待审批", "退课待审批");
 
             Long currentSelectedCount = studentCourseMapper.selectCount(countWrapper);
             if (currentSelectedCount >= course.getMaxCapacity()) {
-                throw new ServiceException("抱歉，该课程名额已满（上限：" + course.getMaxCapacity() + "人）");
+                throw new ServiceException("抱歉，该教师的教学班名额已满（上限：" + course.getMaxCapacity() + "人）");
             }
         }
-        // ====================================================================
 
         // 设置状态为待审批
         studentCourse.setStatus("待审批");
@@ -272,67 +270,65 @@ public class StudentCourseService  {
     /**
      * 批量申请选课
      */
-
     @Transactional
     public void batchApplyCourses(Long studentId, List<Long> courseIds, List<Long> teacherIds, String semester) {
         if (courseIds == null || courseIds.isEmpty() || teacherIds == null || teacherIds.isEmpty() || courseIds.size() != teacherIds.size()) {
             throw new ServiceException("选课参数错误");
         }
-        
+
         // 检查学生是否存在
         if (studentMapper.selectById(studentId) == null) {
             throw new ServiceException("学生不存在");
         }
-        
+
         for (int i = 0; i < courseIds.size(); i++) {
             Long courseId = courseIds.get(i);
             Long teacherId = teacherIds.get(i);
-            
+
             // 检查课程是否存在
             if (courseMapper.selectById(courseId) == null) {
                 throw new ServiceException("课程不存在");
             }
-            
+
             // 检查教师是否存在
             if (teacherMapper.selectById(teacherId) == null) {
                 throw new ServiceException("教师不存在");
             }
-            
+
             // 检查教师是否教授该课程
             LambdaQueryWrapper<TeacherCourse> teacherCourseQuery = new LambdaQueryWrapper<>();
             teacherCourseQuery.eq(TeacherCourse::getTeacherId, teacherId)
-                             .eq(TeacherCourse::getCourseId, courseId)
-                             .eq(TeacherCourse::getSemester, semester);
+                    .eq(TeacherCourse::getCourseId, courseId)
+                    .eq(TeacherCourse::getSemester, semester);
             if (teacherCourseMapper.selectCount(teacherCourseQuery) == 0) {
                 throw new ServiceException("教师未教授此课程");
             }
-            
+
             // 检查是否已选择相同的课程
             LambdaQueryWrapper<StudentCourse> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(StudentCourse::getStudentId, studentId)
-                       .eq(StudentCourse::getCourseId, courseId)
-                       .eq(StudentCourse::getSemester, semester);
+                    .eq(StudentCourse::getCourseId, courseId)
+                    .eq(StudentCourse::getSemester, semester);
             if (studentCourseMapper.selectCount(queryWrapper) > 0) {
                 continue; // 已选择此课程，跳过
             }
 
-            // ================== 【批量申请的容量校验】 ==================
+            // ============ 【核心修复：批量校验加上 teacherId】 ============
             Course course = courseMapper.selectById(courseId);
             if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
                 LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
                 countWrapper.eq(StudentCourse::getCourseId, courseId)
-                        // 同样修复
-                        .eq(StudentCourse::getTeacherId, teacherId)
+                        .eq(StudentCourse::getTeacherId, teacherId) // ★ 精确校验该教师名额
                         .eq(StudentCourse::getSemester, semester)
                         .ne(StudentCourse::getStatus, "已拒绝");
 
                 Long currentSelectedCount = studentCourseMapper.selectCount(countWrapper);
                 if (currentSelectedCount >= course.getMaxCapacity()) {
-                    throw new ServiceException("课程《" + course.getCourseName() + "》名额已满（上限：" + course.getMaxCapacity() + "人），批量申请被阻断！");
+                    throw new ServiceException("课程《" + course.getCourseName() + "》的该教学班名额已满（上限：" + course.getMaxCapacity() + "人），批量申请被阻断！");
                 }
             }
-            // ======================================================================
-            
+            // =============================================================
+
             // 添加选课记录
             StudentCourse studentCourse = new StudentCourse();
             studentCourse.setStudentId(studentId);
@@ -340,7 +336,7 @@ public class StudentCourseService  {
             studentCourse.setTeacherId(teacherId);
             studentCourse.setSemester(semester);
             studentCourse.setStatus("待审批");
-            
+
             if (studentCourseMapper.insert(studentCourse) <= 0) {
                 throw new ServiceException("批量申请选课失败");
             }
@@ -383,20 +379,20 @@ public class StudentCourseService  {
             throw new ServiceException("选课记录不存在");
         }
 
+        // 加上 teacherId，隔离A、B老师的教学班容量
         // 如果是同意通过，进行容量复核！
         if ("已通过".equals(status)) {
             Course course = courseMapper.selectById(studentCourse.getCourseId());
             if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
                 LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
                 countWrapper.eq(StudentCourse::getCourseId, studentCourse.getCourseId())
-                        // 修复
-                        .eq(StudentCourse::getTeacherId, studentCourse.getTeacherId())
+                        .eq(StudentCourse::getTeacherId, studentCourse.getTeacherId()) // 增加这一行隔离教师
                         .eq(StudentCourse::getSemester, studentCourse.getSemester())
-                        .eq(StudentCourse::getStatus, "已通过"); // 注意：审批这里只查真正通过的人数
+                        .eq(StudentCourse::getStatus, "已通过"); // 审批这里只查真正通过的人数
 
                 Long currentApprovedCount = studentCourseMapper.selectCount(countWrapper);
                 if (currentApprovedCount >= course.getMaxCapacity()) {
-                    throw new ServiceException("审批失败：该课程正式录取名额已满（上限：" + course.getMaxCapacity() + "人）！");
+                    throw new ServiceException("审批失败：您的教学班正式录取名额已满（上限：" + course.getMaxCapacity() + "人）！");
                 }
             }
         }
@@ -472,24 +468,12 @@ public class StudentCourseService  {
         }
 
         // 如果指定了教师ID，只查询该教师教授的课程的申请
+        // 严密隔离，只查选了该教师的申请
         if (teacherId != null) {
-            // 获取该教师教授的所有课程ID
-            LambdaQueryWrapper<TeacherCourse> teacherCourseQuery = new LambdaQueryWrapper<>();
-            teacherCourseQuery.eq(TeacherCourse::getTeacherId, teacherId);
-            List<TeacherCourse> teacherCourses = teacherCourseMapper.selectList(teacherCourseQuery);
-            List<Long> courseIds = teacherCourses.stream()
-                    .map(TeacherCourse::getCourseId)
-                    .distinct()
-                    .toList();
-            
-            if (!courseIds.isEmpty()) {
-                queryWrapper.in(StudentCourse::getCourseId, courseIds);
-            } else {
-                // 如果教师没有教授任何课程，返回空结果
-                return new Page<>(currentPage, size);
-            }
+            queryWrapper.eq(StudentCourse::getTeacherId, teacherId);
         }
-        
+
+
         queryWrapper.orderByDesc(StudentCourse::getCreateTime);
         
         Page<StudentCourse> resultPage = studentCourseMapper.selectPage(page, queryWrapper);

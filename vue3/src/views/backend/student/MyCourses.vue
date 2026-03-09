@@ -42,16 +42,6 @@
         <el-table-column prop="credit" label="学分" width="80" />
         <el-table-column prop="hours" label="课时" width="80" />
         <el-table-column prop="courseType" label="课程类型" width="120" />
-        <el-table-column prop="score" label="成绩" width="80">
-          <template #default="scope">
-            {{ scope.row.score || '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="grade" label="等级" width="80">
-          <template #default="scope">
-            {{ scope.row.grade || '-' }}
-          </template>
-        </el-table-column>
         <el-table-column prop="createTime" label="选课时间">
           <template #default="scope">
             {{ formatDateTime(scope.row.createTime) }}

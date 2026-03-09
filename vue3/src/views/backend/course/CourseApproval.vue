@@ -5,7 +5,7 @@
         <el-form-item label="学期">
           <el-input 
             v-model="searchForm.semester" 
-            placeholder="格式如：2023-2024-1" 
+            placeholder="格式如：2024-2025-1"
             clearable
           ></el-input>
         </el-form-item>

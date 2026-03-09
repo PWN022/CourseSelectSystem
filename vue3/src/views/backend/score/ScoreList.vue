@@ -135,13 +135,25 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="教师" prop="teacherId">
-          <el-select v-model="form.teacherId" placeholder="请选择教师" style="width: 100%" filterable>
+        <el-form-item label="任课教师" prop="teacherId">
+          <el-input
+              v-if="userStore.isTeacher"
+              :value="userStore.userInfo?.name"
+              disabled
+              placeholder="自动绑定当前教师"
+          />
+
+          <el-select
+              v-else
+              v-model="form.teacherId"
+              placeholder="请选择任课教师"
+              style="width: 100%"
+          >
             <el-option
-              v-for="item in teacherOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
+                v-for="item in teacherList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
             />
           </el-select>
         </el-form-item>
@@ -391,6 +403,12 @@ const handleAdd = () => {
   Object.keys(form).forEach(key => {
     form[key] = ''
   })
+
+  // 底层数据：依然绑定教师表的 ID
+  if (userStore.isTeacher && userStore.teacherInfo) {
+    form.teacherId = userStore.teacherInfo.id;
+  }
+
   dialogVisible.value = true
 }
 

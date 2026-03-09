@@ -9,7 +9,7 @@
       show-icon
       class="teacher-alert"
     >
-      <p>您当前以教师身份登录，只能查看您担任班主任的班级学生信息。</p>
+      <p>您当前以教师身份登录，可查看您担任班主任的班级学生以及选修了您课程的学生信息。</p>
     </el-alert>
 
     <div class="search-form">
@@ -36,15 +36,14 @@
     </div>
 
     <el-table
-      v-loading="loading"
-      :data="tableData"
-      border
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
+        v-loading="loading"
+        :data="tableData"
+        border
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="studentNo" label="学号" width="120" />
-      <!--后添加-->
       <el-table-column label="学生姓名" width="120">
         <template #default="scope">
           {{ scope.row?.name || scope.row?.username || '未命名' }}
@@ -56,14 +55,31 @@
         </template>
       </el-table-column>
       <el-table-column prop="className" label="班级" width="150" />
+
+      <el-table-column label="身份来源" width="130" align="center">
+        <template #default="scope">
+          <el-tag v-if="scope.row.studentType === '本班学生'" type="success" effect="light">
+            {{ scope.row.studentType }}
+          </el-tag>
+          <el-tag v-else-if="scope.row.studentType === '授课学生'" type="warning" effect="light">
+            {{ scope.row.studentType }}
+          </el-tag>
+          <el-tag v-else-if="scope.row.studentType === '本班且选课'" type="danger" effect="dark">
+            {{ scope.row.studentType }}
+          </el-tag>
+          <el-tag v-else type="info" effect="plain">
+            {{ scope.row.studentType || '全校学生' }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="address" label="家庭住址" min-width="200" />
       <el-table-column v-if="userStore.isAdmin" label="操作" width="200" fixed="right">
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button
-            size="small"
-            type="danger"
-            @click="handleDelete(scope.row)"
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.row)"
           >删除</el-button>
         </template>
       </el-table-column>
