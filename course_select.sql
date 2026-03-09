@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 09/03/2026 16:41:05
+ Date: 09/03/2026 17:33:37
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,7 @@ CREATE TABLE `attendance`  (
   INDEX `idx_course_id`(`course_id`) USING BTREE,
   CONSTRAINT `fk_attendance_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_attendance_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '考勤信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '考勤信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of attendance
@@ -53,6 +53,15 @@ INSERT INTO `attendance` VALUES (11, 6, 9, '2025-09-02', '出席', NULL, '2025-0
 INSERT INTO `attendance` VALUES (12, 6, 9, '2025-09-09', '请假', '事假', '2025-09-09 08:20:00');
 INSERT INTO `attendance` VALUES (13, 6, 5, '2025-03-10', '出席', NULL, '2025-03-10 10:00:00');
 INSERT INTO `attendance` VALUES (14, 6, 5, '2025-03-17', '出席', NULL, '2025-03-17 10:00:00');
+INSERT INTO `attendance` VALUES (15, 4, 10, '2024-09-10', '出席', '', '2024-09-10 16:53:05');
+INSERT INTO `attendance` VALUES (16, 4, 10, '2024-09-11', '出席', '', '2024-09-11 16:55:50');
+INSERT INTO `attendance` VALUES (17, 4, 10, '2024-09-17', '出席', '', '2024-09-17 16:56:07');
+INSERT INTO `attendance` VALUES (18, 4, 10, '2024-09-18', '出席', '', '2024-09-18 16:56:18');
+INSERT INTO `attendance` VALUES (19, 4, 10, '2024-09-24', '请假', '', '2024-09-24 16:56:32');
+INSERT INTO `attendance` VALUES (20, 4, 10, '2024-09-25', '出席', '', '2024-09-25 16:56:53');
+INSERT INTO `attendance` VALUES (21, 4, 10, '2024-10-08', '缺席', '', '2024-10-08 16:57:24');
+INSERT INTO `attendance` VALUES (22, 8, 10, '2024-09-10', '出席', '', '2024-09-10 17:32:10');
+INSERT INTO `attendance` VALUES (23, 14, 10, '2024-09-10', '出席', '', '2024-09-10 17:32:10');
 
 -- ----------------------------
 -- Table structure for class
@@ -138,7 +147,7 @@ CREATE TABLE `score`  (
   CONSTRAINT `fk_score_select` FOREIGN KEY (`student_id`, `course_id`, `semester`) REFERENCES `student_course` (`student_id`, `course_id`, `semester`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_score_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_score_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '成绩信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '成绩信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of score
@@ -157,6 +166,9 @@ INSERT INTO `score` VALUES (11, 10, 5, 12, '2024-2025-2', 90.00, 'A', '', '2026-
 INSERT INTO `score` VALUES (12, 4, 5, 12, '2024-2025-2', 78.00, 'C', '', '2026-03-09 16:34:28', '2026-03-09 16:34:28');
 INSERT INTO `score` VALUES (13, 13, 5, 12, '2024-2025-2', 95.00, 'A', '', '2026-03-09 16:34:36', '2026-03-09 16:34:36');
 INSERT INTO `score` VALUES (14, 12, 5, 12, '2024-2025-2', 60.00, 'D', '', '2026-03-09 16:34:50', '2026-03-09 16:34:50');
+INSERT INTO `score` VALUES (15, 4, 10, 10, '2024-2025-1', 70.00, 'C', '还有很大的进步空间', '2025-01-09 16:59:16', '2026-03-09 17:07:10');
+INSERT INTO `score` VALUES (16, 8, 10, 10, '2024-2025-1', 86.00, 'B', '望今后继续保持勤奋态度', '2025-01-09 17:00:11', '2026-03-09 17:07:16');
+INSERT INTO `score` VALUES (17, 14, 10, 10, '2024-2025-1', 90.00, 'A', '优秀', '2025-01-09 17:00:23', '2026-03-09 17:07:20');
 
 -- ----------------------------
 -- Table structure for student
@@ -219,7 +231,7 @@ CREATE TABLE `student_course`  (
   CONSTRAINT `fk_sc_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_sc_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_sc_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生选课表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '学生选课表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of student_course
@@ -227,7 +239,7 @@ CREATE TABLE `student_course`  (
 INSERT INTO `student_course` VALUES (1, 1, 1, 1, '2024-2025-1', '已通过', '2024-09-01 08:00:00');
 INSERT INTO `student_course` VALUES (2, 1, 2, 2, '2024-2025-1', '已通过', '2024-09-01 08:05:00');
 INSERT INTO `student_course` VALUES (3, 2, 1, 1, '2024-2025-1', '已通过', '2024-09-01 08:10:00');
-INSERT INTO `student_course` VALUES (4, 2, 2, 2, '2024-2025-1', '待审批', '2024-09-01 08:15:00');
+INSERT INTO `student_course` VALUES (4, 2, 2, 2, '2024-2025-1', '已拒绝', '2024-09-01 08:15:00');
 INSERT INTO `student_course` VALUES (5, 3, 2, 2, '2024-2025-1', '已通过', '2024-09-01 08:20:00');
 INSERT INTO `student_course` VALUES (6, 4, 9, 11, '2025-2026-1', '已通过', '2025-08-25 09:30:00');
 INSERT INTO `student_course` VALUES (7, 4, 5, 12, '2024-2025-2', '已通过', '2025-03-01 09:00:00');
@@ -245,6 +257,9 @@ INSERT INTO `student_course` VALUES (22, 13, 6, 6, '2024-2025-1', '已通过', '
 INSERT INTO `student_course` VALUES (23, 5, 5, 5, '2024-2025-1', '已通过', '2026-03-09 15:51:51');
 INSERT INTO `student_course` VALUES (24, 9, 5, 5, '2024-2025-1', '已通过', '2026-03-09 16:17:36');
 INSERT INTO `student_course` VALUES (26, 10, 5, 12, '2024-2025-2', '已通过', '2026-03-09 16:33:42');
+INSERT INTO `student_course` VALUES (27, 4, 10, 10, '2024-2025-1', '已通过', '2026-03-09 16:51:11');
+INSERT INTO `student_course` VALUES (28, 8, 10, 10, '2024-2025-1', '已通过', '2026-03-09 16:59:32');
+INSERT INTO `student_course` VALUES (29, 14, 10, 10, '2024-2025-1', '已通过', '2026-03-09 16:59:40');
 
 -- ----------------------------
 -- Table structure for teacher

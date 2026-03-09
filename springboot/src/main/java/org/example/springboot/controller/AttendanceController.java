@@ -106,13 +106,21 @@ public class AttendanceController {
     @Operation(summary = "批量添加考勤记录")
     @PostMapping("/batch")
     public Result<?> batchAddAttendance(@RequestBody Map<String, Object> params) {
-        @SuppressWarnings("unchecked")
-        List<Long> studentIds = (List<Long>) params.get("studentIds");
+        // 安全地将前端传来的未知类型数字转换为 Long
+        List<?> rawStudentIds = (List<?>) params.get("studentIds");
+        List<Long> studentIds = new java.util.ArrayList<>();
+        if (rawStudentIds != null) {
+            for (Object rawId : rawStudentIds) {
+                studentIds.add(Long.valueOf(rawId.toString()));
+            }
+        }
+
         Long courseId = Long.valueOf(params.get("courseId").toString());
         LocalDate attendanceDate = LocalDate.parse(params.get("attendanceDate").toString());
         String status = (String) params.get("status");
         String remark = (String) params.get("remark");
 
+        // 此时 studentIds 里面才是真正的 Long 类型
         attendanceService.batchAddAttendance(studentIds, courseId, attendanceDate, status, remark);
         return Result.success();
     }

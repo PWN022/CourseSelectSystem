@@ -109,27 +109,6 @@
         <div class="chart" ref="lineChartRef"></div>
       </el-card>
     </div>
-
-    <div class="table-container">
-      <el-card shadow="hover">
-        <template #header>
-          <div class="card-header">
-            <span>班级考勤统计</span>
-          </div>
-        </template>
-        <el-table :data="classStatistics" border style="width: 100%">
-          <el-table-column prop="className" label="班级" />
-          <el-table-column prop="totalStudents" label="学生总数" />
-          <el-table-column prop="attendanceRate" label="出勤率">
-            <template #default="scope">
-              {{ scope.row.attendanceRate }}%
-            </template>
-          </el-table-column>
-          <el-table-column prop="absenceCount" label="缺勤次数" />
-          <el-table-column prop="leaveCount" label="请假次数" />
-        </el-table>
-      </el-card>
-    </div>
   </div>
 </template>
 
@@ -156,7 +135,6 @@ const courseOptions = ref([])
 const attendanceRate = ref(0)
 const absenceCount = ref(0)
 const leaveCount = ref(0)
-const classStatistics = ref([])
 
 // 图表引用
 const pieChartRef = ref(null)
@@ -228,8 +206,7 @@ const fetchStatistics = async () => {
         attendanceRate.value = res.attendanceRate || 0
         absenceCount.value = res.absentCount || 0
         leaveCount.value = res.leaveCount || 0
-        classStatistics.value = res.classStatistics || []
-        
+
         // 初始化图表
         initPieChart(res)
         initLineChart(res)
@@ -436,13 +413,6 @@ const resetSearch = () => {
       height: 400px;
     }
   }
-  
-  .table-container {
-    margin-bottom: 20px;
-    
-    .card-header {
-      font-weight: bold;
-    }
-  }
+
 }
 </style> 
