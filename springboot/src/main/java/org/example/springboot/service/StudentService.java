@@ -172,7 +172,12 @@ public class StudentService {
         if (user != null) {
             student.setUsername(user.getUsername());
             student.setName(user.getName());
+
+            // ======== 【核心修复：把User表里的电话和邮箱赋值给Student】 ========
+            student.setPhone(user.getPhone());
+            student.setEmail(user.getEmail());
         }
+
         if(clazz != null && clazz.getHeadTeacherId() != null) {
             Teacher headTeacher = teacherMapper.selectById(clazz.getHeadTeacherId());
             if(headTeacher != null) {
@@ -278,10 +283,32 @@ public class StudentService {
         if (studentMapper.deleteByIds(ids) <= 0) throw new ServiceException("批量删除学生失败");
     }
 
-    public List<Student> getStudentsByClassId(Long classId) {
+    public List<java.util.Map<String, Object>> getStudentsByClassId(Long classId) {
         LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Student::getClassId, classId);
-        return studentMapper.selectList(queryWrapper);
+
+        List<Student> students = studentMapper.selectList(queryWrapper);
+        List<java.util.Map<String, Object>> resultList = new java.util.ArrayList<>();
+
+        for (Student student : students) {
+            // 填充姓名、电话等信息
+            fillInfo(student);
+
+            // 把对象变成 JSON 传给前端时，自动抛弃所有带有 @TableField(exist = false)
+            // 将数据转移到原生的 Map 中，强行绕过 JSON 过滤规则
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("id", student.getId());
+            map.put("studentNo", student.getStudentNo());
+            map.put("name", student.getName());
+            map.put("gender", student.getGender());
+            map.put("phone", student.getPhone());
+            map.put("email", student.getEmail());
+            map.put("address", student.getAddress());
+
+            resultList.add(map);
+        }
+
+        return resultList;
     }
 
     public Student getByUserId(Long userId){

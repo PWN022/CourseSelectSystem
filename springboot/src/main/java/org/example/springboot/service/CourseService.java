@@ -71,6 +71,11 @@ public class CourseService {
                     .and(w -> w.isNull(StudentCourse::getStatus).or().ne(StudentCourse::getStatus, "已拒绝"));
             int studentCount = studentCourseMapper.selectCount(studentQueryWrapper).intValue();
             course.setStudentCount(studentCount);
+
+            // 动态计算全校总容量 = 单班容量 * 授课教师人数
+            if (teacherCount > 0 && course.getMaxCapacity() != null){
+                course.setMaxCapacity(course.getMaxCapacity() * teacherCount);
+            }
         }
         
         return resultPage;

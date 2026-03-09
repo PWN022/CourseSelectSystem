@@ -247,6 +247,8 @@ public class StudentCourseService  {
         if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
             LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
             countWrapper.eq(StudentCourse::getCourseId, studentCourse.getCourseId())
+                    // 修复：将容量精确到具体的授课教师
+                    .eq(StudentCourse::getTeacherId, studentCourse.getTeacherId())
                     .eq(StudentCourse::getSemester, studentCourse.getSemester())
                     // 锁定占用名额的状态
                     .in(StudentCourse::getStatus, "已通过", "待审批", "退课待审批");
@@ -319,6 +321,8 @@ public class StudentCourseService  {
             if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
                 LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
                 countWrapper.eq(StudentCourse::getCourseId, courseId)
+                        // 同样修复
+                        .eq(StudentCourse::getTeacherId, teacherId)
                         .eq(StudentCourse::getSemester, semester)
                         .ne(StudentCourse::getStatus, "已拒绝");
 
@@ -385,6 +389,8 @@ public class StudentCourseService  {
             if (course.getMaxCapacity() != null && course.getMaxCapacity() > 0) {
                 LambdaQueryWrapper<StudentCourse> countWrapper = new LambdaQueryWrapper<>();
                 countWrapper.eq(StudentCourse::getCourseId, studentCourse.getCourseId())
+                        // 修复
+                        .eq(StudentCourse::getTeacherId, studentCourse.getTeacherId())
                         .eq(StudentCourse::getSemester, studentCourse.getSemester())
                         .eq(StudentCourse::getStatus, "已通过"); // 注意：审批这里只查真正通过的人数
 

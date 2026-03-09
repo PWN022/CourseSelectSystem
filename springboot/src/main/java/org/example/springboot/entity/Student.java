@@ -73,4 +73,12 @@ public class Student {
     @TableField(exist = false)
     @Schema(description = "班主任邮箱")
     private String headTeacherEmail;
+
+    @TableField(exist = false)
+    @Schema(description = "联系电话")
+    private String phone;
+
+    @TableField(exist = false)
+    @Schema(description = "电子邮箱")
+    private String email;
 }
